@@ -1,4 +1,4 @@
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Forrest Gump',
         677387716,
         144,
@@ -6,7 +6,7 @@ VALUES ('Forrest Gump',
         1994);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Shawshank Redemption',
         59841469,
         144,
@@ -14,7 +14,7 @@ VALUES ('Shawshank Redemption',
         1994);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Zielona Mila',
         286801374,
         168,
@@ -22,7 +22,7 @@ VALUES ('Zielona Mila',
         1999);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Złap mnie, jeśli potrafisz',
         352114312,
         141,
@@ -30,7 +30,7 @@ VALUES ('Złap mnie, jeśli potrafisz',
         2002);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Wyspa tajemnic',
         294804195,
         138,
@@ -38,7 +38,7 @@ VALUES ('Wyspa tajemnic',
         2010);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Nietykalni',
         426588510,
         172,
@@ -46,7 +46,7 @@ VALUES ('Nietykalni',
         2011);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Siedem',
         327333559,
         127,
@@ -54,7 +54,7 @@ VALUES ('Siedem',
         1995);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Szósty Zmysł',
         672806292,
         167,
@@ -62,7 +62,7 @@ VALUES ('Szósty Zmysł',
         1999);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Chłopcy z ferajny',
         2108766,
         146,
@@ -70,7 +70,7 @@ VALUES ('Chłopcy z ferajny',
         1990);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Ojciec chrzestny',
         245066411,
         175,
@@ -78,7 +78,7 @@ VALUES ('Ojciec chrzestny',
         1972);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Ojciec chrzestny II',
         193000000,
         200,
@@ -86,7 +86,7 @@ VALUES ('Ojciec chrzestny II',
         1974);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Zapach kobiety',
         134095253,
         157,
@@ -94,7 +94,7 @@ VALUES ('Zapach kobiety',
         1992);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Lista Schindlera',
         322139355,
         195,
@@ -102,7 +102,7 @@ VALUES ('Lista Schindlera',
         1993);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Co gryzie Gilberta Grape''a',
         287595253,
         108,
@@ -110,7 +110,7 @@ VALUES ('Co gryzie Gilberta Grape''a',
         1993);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Cast Away - poza światem',
         429632142,
         143,
@@ -118,7 +118,7 @@ VALUES ('Cast Away - poza światem',
         2000);
 -- --
 -- --
-INSERT INTO film (title, boxoffice, duration, description, premiere_year)
+INSERT INTO film (title, box_office, duration, description, release_year)
 VALUES ('Piękny umysł',
         313542341,
         135,

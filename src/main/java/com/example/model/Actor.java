@@ -1,12 +1,17 @@
 package com.example.model;
 
+import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "actor")
 public class Actor {
@@ -14,7 +19,7 @@ public class Actor {
     @Id
     @Column(name = "actor_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotBlank(message = "First name is mandatory")
     @Column(name = "first_name")
@@ -40,75 +45,10 @@ public class Actor {
     @Column(name = "height")
     private Integer height;
 
+    @Builder.Default
     @ManyToMany(mappedBy = "actors", fetch = FetchType.LAZY)
     private List<Film> films = new ArrayList<>();
 
-    public Actor() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getBornYear() {
-        return bornYear;
-    }
-
-    public void setBornYear(Integer bornYear) {
-        this.bornYear = bornYear;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public void setHeight(Integer height) {
-        this.height = height;
-    }
-
-    public List<Film> getFilms() {
-        return films;
-    }
-
-    public void setFilms(List<Film> films) {
-        this.films = films;
-    }
-
-    public String getBornPlace() {
-        return bornPlace;
-    }
-
-    public void setBornPlace(String bornPlace) {
-        this.bornPlace = bornPlace;
-    }
 }
 
 

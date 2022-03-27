@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
                 .map(film -> new SimpleFilmResponse(
                         film.getId(),
                         film.getTitle(),
-                        film.getPremiereYear(),
+                        film.getReleaseYear(),
                         film.getDuration()
                 ))
                 .collect(Collectors.toList()), pageable, totalElements);

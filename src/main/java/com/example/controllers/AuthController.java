@@ -79,8 +79,12 @@ public class AuthController {
                     HttpStatus.BAD_REQUEST);
         }
 
-        User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
-                signUpRequest.getEmail(), signUpRequest.getPassword());
+        User user =  User.builder()
+                .name(signUpRequest.getName())
+                .username(signUpRequest.getUsername())
+                .email(signUpRequest.getEmail())
+                .password(signUpRequest.getPassword())
+                .build();
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 

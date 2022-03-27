@@ -48,7 +48,7 @@ public class FilmServiceImpl implements FilmService {
                 .map(film -> new SimpleFilmResponse(
                         film.getId(),
                         film.getTitle(),
-                        film.getPremiereYear(),
+                        film.getReleaseYear(),
                         film.getDuration()))
                 .collect(Collectors.toList()), pageable, totalElements);
     }
@@ -61,8 +61,8 @@ public class FilmServiceImpl implements FilmService {
         film.setTitle(newFilmRequest.getTitle());
         film.setDescription(newFilmRequest.getDescription());
         film.setDuration(newFilmRequest.getDuration());
-        film.setBoxoffice(newFilmRequest.getBoxoffice());
-        film.setPremiereYear(newFilmRequest.getPremiereYear());
+        film.setBoxOffice(newFilmRequest.getBoxoffice());
+        film.setReleaseYear(newFilmRequest.getPremiereYear());
 
         try {
             filmRepository.save(film);
@@ -81,7 +81,7 @@ public class FilmServiceImpl implements FilmService {
             }
 
             if (!(filmUpdateRequest.getBoxoffice() == null)) {
-                film.setBoxoffice(filmUpdateRequest.getBoxoffice());
+                film.setBoxOffice(filmUpdateRequest.getBoxoffice());
             }
 
             if (!(filmUpdateRequest.getDuration() == null)) {
@@ -93,7 +93,7 @@ public class FilmServiceImpl implements FilmService {
             }
 
             if (!(filmUpdateRequest.getPremiereYear() == null)) {
-                film.setPremiereYear(filmUpdateRequest.getPremiereYear());
+                film.setReleaseYear(filmUpdateRequest.getPremiereYear());
             }
 
             return filmRepository.save(film);
@@ -113,11 +113,11 @@ public class FilmServiceImpl implements FilmService {
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
 
         fullFilmResponse.setTitle(film.getTitle());
-        fullFilmResponse.setBoxoffice(film.getBoxoffice());
+        fullFilmResponse.setBoxoffice(film.getBoxOffice());
         fullFilmResponse.setDuration(film.getDuration());
         fullFilmResponse.setId(film.getId());
         fullFilmResponse.setDescription(film.getDescription());
-        fullFilmResponse.setPremiereYear(film.getPremiereYear());
+        fullFilmResponse.setPremiereYear(film.getReleaseYear());
 
         return fullFilmResponse;
     }
@@ -158,7 +158,7 @@ public class FilmServiceImpl implements FilmService {
                 .map(film -> new SimpleFilmResponse(
                         film.getId(),
                         film.getTitle(),
-                        film.getPremiereYear(),
+                        film.getReleaseYear(),
                         film.getDuration()
                 ))
                 .collect(Collectors.toList()), pageable, totalElements);
