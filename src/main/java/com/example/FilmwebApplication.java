@@ -14,7 +14,6 @@ public class FilmwebApplication {
     public static void main(String[] args) {
 
 
-
         SpringApplication.run(FilmwebApplication.class, args);
     }
 

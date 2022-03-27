@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
 
     private CommentRepository commentRepository;
 
@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public Page<CommentResponse> getByFilmId(Pageable pageable, Long filmId) {
-       Page<Comment> commentList = commentRepository.findByFilmId(pageable, filmId);
+        Page<Comment> commentList = commentRepository.findByFilmId(pageable, filmId);
         int totalElements = (int) commentList.getTotalElements();
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 

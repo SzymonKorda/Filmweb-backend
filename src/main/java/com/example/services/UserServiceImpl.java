@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
         userProfileResponse.setUsername(user.getUsername());
         userProfileResponse.setEmail(user.getEmail());
 
-        for(Film film : user.getUserFilms()) {
+        for (Film film : user.getUserFilms()) {
             SimpleFilmResponse simpleFilmResponse = new SimpleFilmResponse();
             simpleFilmResponse.setId(film.getId());
             simpleFilmResponse.setTitle(film.getTitle());
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
         List<Film> films = user.getUserFilms();
         for (Film film : films) {
-            if(film.getId() == filmId) {
+            if (film.getId() == filmId) {
                 films.remove(film);
                 break;
             }

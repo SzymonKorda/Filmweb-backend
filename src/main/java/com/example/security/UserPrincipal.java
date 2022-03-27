@@ -38,17 +38,17 @@ public class UserPrincipal implements UserDetails {
     }
 
     public static UserPrincipal create(User user) {
-            List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
-                    new SimpleGrantedAuthority(role.getName().name())
-            ).collect(Collectors.toList());
+        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
+                new SimpleGrantedAuthority(role.getName().name())
+        ).collect(Collectors.toList());
 
-            boolean adminFlag;
-            String role = authorities.get(0).getAuthority();
-            if(role.equals("ROLE_ADMIN")) {
-                adminFlag = true;
-            } else {
-                adminFlag = false;
-            }
+        boolean adminFlag;
+        String role = authorities.get(0).getAuthority();
+        if (role.equals("ROLE_ADMIN")) {
+            adminFlag = true;
+        } else {
+            adminFlag = false;
+        }
 
         return new UserPrincipal(
                 user.getId(),
@@ -61,7 +61,7 @@ public class UserPrincipal implements UserDetails {
         );
     }
 
-    public User getUser(){
+    public User getUser() {
         User user = new User();
         user.setId(this.getId());
         user.setUsername(this.getUsername());

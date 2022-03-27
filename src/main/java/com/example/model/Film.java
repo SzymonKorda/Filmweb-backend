@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name =  "film", uniqueConstraints = {@UniqueConstraint(
+@Table(name = "film", uniqueConstraints = {@UniqueConstraint(
         columnNames = {
                 "title",
                 "premiere_year"
@@ -46,8 +46,8 @@ public class Film {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "Film_Actor",
-            joinColumns = { @JoinColumn(name = "film_id")},
-            inverseJoinColumns = { @JoinColumn(name = "actor_id") }
+            joinColumns = {@JoinColumn(name = "film_id")},
+            inverseJoinColumns = {@JoinColumn(name = "actor_id")}
     )
     private List<Actor> actors = new ArrayList<>();
 

@@ -61,7 +61,7 @@ public class ActorController {
 
     @PostMapping("/actors/{actorId}/films/{filmId}")
     @RolesAllowed("ROLE_ADMIN")
-    public ResponseEntity<?> addFilmToActor(@PathVariable Long actorId, @PathVariable Long filmId ) {
+    public ResponseEntity<?> addFilmToActor(@PathVariable Long actorId, @PathVariable Long filmId) {
         actorService.addFilmToActor(actorId, filmId);
         return ResponseEntity.ok(new ApiResponse(true, "Film added to actor successfully"));
     }

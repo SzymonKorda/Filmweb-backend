@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-
 @Service
 public class ActorServiceImpl implements ActorService {
 
@@ -51,27 +50,27 @@ public class ActorServiceImpl implements ActorService {
     @Override
     public Actor updateActor(Long actorId, ActorUpdateRequest actorUpdateRequest) {
         return actorRepository.findById(actorId).map(actor -> {
-            if(!(actorUpdateRequest.getFirstName() == null)) {
+            if (!(actorUpdateRequest.getFirstName() == null)) {
                 actor.setFirstName(actorUpdateRequest.getFirstName());
             }
 
-            if(!(actorUpdateRequest.getLastName() == null)) {
+            if (!(actorUpdateRequest.getLastName() == null)) {
                 actor.setLastName(actorUpdateRequest.getLastName());
             }
 
-            if(!(actorUpdateRequest.getDescription() == null)) {
+            if (!(actorUpdateRequest.getDescription() == null)) {
                 actor.setDescription(actorUpdateRequest.getDescription());
             }
 
-            if(!(actorUpdateRequest.getBornYear() == null)) {
+            if (!(actorUpdateRequest.getBornYear() == null)) {
                 actor.setBornYear(actorUpdateRequest.getBornYear());
             }
 
-            if(!(actorUpdateRequest.getBornPlace() == null)) {
+            if (!(actorUpdateRequest.getBornPlace() == null)) {
                 actor.setBornPlace(actorUpdateRequest.getBornPlace());
             }
 
-            if(!(actorUpdateRequest.getHeight() == null)) {
+            if (!(actorUpdateRequest.getHeight() == null)) {
                 actor.setHeight(actorUpdateRequest.getHeight());
             }
 
@@ -129,7 +128,7 @@ public class ActorServiceImpl implements ActorService {
                         actor.getLastName(),
                         actor.getHeight(),
                         actor.getBornYear()
-                        ))
+                ))
                 .collect(Collectors.toList()), pageable, totalElements);
 
     }
@@ -150,7 +149,7 @@ public class ActorServiceImpl implements ActorService {
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
         List<Film> films = actor.getFilms();
         for (Film film1 : films) {
-            if(film1.getId() == filmId) {
+            if (film1.getId() == filmId) {
                 films.remove(film1);
                 film.getActors().remove(actor);
                 break;

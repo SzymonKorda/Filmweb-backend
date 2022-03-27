@@ -8,5 +8,6 @@ import org.springframework.data.domain.Pageable;
 public interface CommentService {
 
     Page<CommentResponse> getByFilmId(Pageable pageable, Long filmId);
+
     void deleteCommentById(Long commentId);
 }

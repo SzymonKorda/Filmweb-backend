@@ -40,9 +40,9 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Page<SimpleFilmResponse> findAllFilms(FilmSpecification filmSpecification, Pageable pageable) {
-
         Page<Film> filmsListPage = filmRepository.findAll(filmSpecification, pageable);
         int totalElements = (int) filmsListPage.getTotalElements();
+
         return new PageImpl<>(filmsListPage
                 .stream()
                 .map(film -> new SimpleFilmResponse(
@@ -72,28 +72,27 @@ public class FilmServiceImpl implements FilmService {
     }
 
 
-
     @Override
     public Film updateFilm(Long filmId, FilmUpdateRequest filmUpdateRequest) {
 
         return filmRepository.findById(filmId).map(film -> {
-            if(!(filmUpdateRequest.getTitle() == null)) {
+            if (!(filmUpdateRequest.getTitle() == null)) {
                 film.setTitle(filmUpdateRequest.getTitle());
             }
 
-            if(!(filmUpdateRequest.getBoxoffice() == null)) {
+            if (!(filmUpdateRequest.getBoxoffice() == null)) {
                 film.setBoxoffice(filmUpdateRequest.getBoxoffice());
             }
 
-            if(!(filmUpdateRequest.getDuration() == null)) {
+            if (!(filmUpdateRequest.getDuration() == null)) {
                 film.setDuration(filmUpdateRequest.getDuration());
             }
 
-            if(!(filmUpdateRequest.getDescription() == null)) {
+            if (!(filmUpdateRequest.getDescription() == null)) {
                 film.setDescription(filmUpdateRequest.getDescription());
             }
 
-            if(!(filmUpdateRequest.getPremiereYear() == null)) {
+            if (!(filmUpdateRequest.getPremiereYear() == null)) {
                 film.setPremiereYear(filmUpdateRequest.getPremiereYear());
             }
 
@@ -179,7 +178,7 @@ public class FilmServiceImpl implements FilmService {
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
         List<Actor> actors = film.getActors();
         for (Actor actor : actors) {
-            if(actor.getId() == actorId) {
+            if (actor.getId() == actorId) {
                 actors.remove(actor);
                 break;
             }

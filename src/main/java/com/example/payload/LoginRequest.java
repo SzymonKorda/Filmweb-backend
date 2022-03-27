@@ -7,7 +7,8 @@ public class LoginRequest {
     @NotBlank
     private String usernameOrEmail;
 
-    @NotBlank String password;
+    @NotBlank
+    String password;
 
     public String getUsernameOrEmail() {
         return usernameOrEmail;
