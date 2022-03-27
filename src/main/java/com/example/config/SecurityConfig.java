@@ -89,6 +89,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/actors/{actorId}", "/films/{filmId}/comments", "/films/{filmId}/actors",
                         "/actors/{actorId}/films", "/actors/choices", "/films/choices")
                 .permitAll()
+                .antMatchers( "/v2/api-docs",
+                        "/swagger-resources",
+                        "/swagger-resources/**",
+                        "/configuration/ui",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        // -- Swagger UI v3 (OpenAPI)
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**")
+                .permitAll()
                 .anyRequest()
                 .authenticated();
 
