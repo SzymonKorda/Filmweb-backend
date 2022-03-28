@@ -1,5 +1,7 @@
 package com.example.services;
 
+import com.example.mapper.ActorMapper;
+import com.example.mapper.FilmMapper;
 import com.example.specification.FilmSpecification;
 import com.example.exceptions.ResourceNotFoundException;
 import com.example.exceptions.UniqueConstraintException;
@@ -13,122 +15,79 @@ import com.example.repositories.CommentRepository;
 import com.example.repositories.FilmRepository;
 import com.example.repositories.UserRepository;
 import com.example.security.UserPrincipal;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class FilmServiceImpl implements FilmService {
 
-    private FilmRepository filmRepository;
-    private ActorRepository actorRepository;
-    private CommentRepository commentRepository;
-    private UserRepository userRepository;
-
-    public FilmServiceImpl(FilmRepository filmRepository, ActorRepository actorRepository,
-                           CommentRepository commentRepository, UserRepository userRepository) {
-        this.filmRepository = filmRepository;
-        this.actorRepository = actorRepository;
-        this.commentRepository = commentRepository;
-        this.userRepository = userRepository;
-    }
+    private final FilmRepository filmRepository;
+    private final ActorRepository actorRepository;
+    private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Page<SimpleFilmResponse> findAllFilms(FilmSpecification filmSpecification, Pageable pageable) {
         Page<Film> filmsListPage = filmRepository.findAll(filmSpecification, pageable);
-        int totalElements = (int) filmsListPage.getTotalElements();
-
         return new PageImpl<>(filmsListPage
                 .stream()
-                .map(film -> new SimpleFilmResponse(
-                        film.getId(),
-                        film.getTitle(),
-                        film.getReleaseYear(),
-                        film.getDuration()))
-                .collect(Collectors.toList()), pageable, totalElements);
+                .map(FilmMapper::mapFilmToSimpleFilmResponse)
+                .collect(Collectors.toList()), pageable, filmsListPage.getTotalElements());
     }
-
 
     @Override
     public void newFilm(NewFilmRequest newFilmRequest) {
-
-        Film film = new Film();
-        film.setTitle(newFilmRequest.getTitle());
-        film.setDescription(newFilmRequest.getDescription());
-        film.setDuration(newFilmRequest.getDuration());
-        film.setBoxOffice(newFilmRequest.getBoxoffice());
-        film.setReleaseYear(newFilmRequest.getPremiereYear());
-
         try {
-            filmRepository.save(film);
+            filmRepository.save(prepareFilm(newFilmRequest));
         } catch (RuntimeException ex) {
-            throw new UniqueConstraintException("A film with this title exists in the database");
+            throw new UniqueConstraintException("A film with this title and release year already exists in the database");
         }
     }
 
-
     @Override
-    public Film updateFilm(Long filmId, FilmUpdateRequest filmUpdateRequest) {
-
-        return filmRepository.findById(filmId).map(film -> {
-            if (!(filmUpdateRequest.getTitle() == null)) {
-                film.setTitle(filmUpdateRequest.getTitle());
-            }
-
-            if (!(filmUpdateRequest.getBoxoffice() == null)) {
-                film.setBoxOffice(filmUpdateRequest.getBoxoffice());
-            }
-
-            if (!(filmUpdateRequest.getDuration() == null)) {
-                film.setDuration(filmUpdateRequest.getDuration());
-            }
-
-            if (!(filmUpdateRequest.getDescription() == null)) {
-                film.setDescription(filmUpdateRequest.getDescription());
-            }
-
-            if (!(filmUpdateRequest.getPremiereYear() == null)) {
-                film.setReleaseYear(filmUpdateRequest.getPremiereYear());
-            }
-
-            return filmRepository.save(film);
-        }).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
+    public void updateFilm(Long filmId, FilmUpdateRequest filmUpdateRequest) {
+        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
+        filmRepository.save(FilmMapper.mapFilmUpdateRequestToFilm(filmUpdateRequest, film));
     }
 
     @Override
     public void deleteFilmById(Long filmId) {
-        Film film = filmRepository.findById(filmId).orElseThrow(() ->
-                new ResourceNotFoundException("Film", "id", filmId));
+        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
         filmRepository.delete(film);
     }
 
     @Override
     public FullFilmResponse findFilmById(Long filmId) {
-        FullFilmResponse fullFilmResponse = new FullFilmResponse();
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
-
-        fullFilmResponse.setTitle(film.getTitle());
-        fullFilmResponse.setBoxoffice(film.getBoxOffice());
-        fullFilmResponse.setDuration(film.getDuration());
-        fullFilmResponse.setId(film.getId());
-        fullFilmResponse.setDescription(film.getDescription());
-        fullFilmResponse.setPremiereYear(film.getReleaseYear());
-
-        return fullFilmResponse;
+        return FilmMapper.mapFilmToFullFilmResponse(film);
     }
 
+    @Override
+    public Page<SimpleActorResponse> getFilmActors(Long filmId, Pageable pageable) {
+        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
+        Page<Actor> actorsListPage = actorRepository.findAllByFilms(film, pageable);
+        return new PageImpl<>(actorsListPage
+                .stream()
+                .map(ActorMapper::mapActorToSimpleActorResponse)
+                .collect(Collectors.toList()), pageable, actorsListPage.getTotalElements());
+    }
 
     @Override
-    @Transactional
     public void addActorToFilm(Long filmId, Long actorId) {
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
         Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "id", actorId));
         film.getActors().add(actor);
+        filmRepository.save(film);
     }
 
 
@@ -149,18 +108,13 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Page<SimpleFilmResponse> getByActorId(Pageable pageable, Long actorId) {
         Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "Id", actorId));
-        List<Film> films = actor.getFilms();
-        Page<Film> filmPage = new PageImpl<>(films);
+        Set<Film> films = actor.getFilms();
+        Page<Film> filmPage = new PageImpl<>(new ArrayList<>(films));
         int totalElements = (int) filmPage.getTotalElements();
 
         return new PageImpl<>(filmPage
                 .stream()
-                .map(film -> new SimpleFilmResponse(
-                        film.getId(),
-                        film.getTitle(),
-                        film.getReleaseYear(),
-                        film.getDuration()
-                ))
+                .map(FilmMapper::mapFilmToSimpleFilmResponse)
                 .collect(Collectors.toList()), pageable, totalElements);
     }
 
@@ -173,16 +127,13 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    @Transactional
-    public void deleteActorFilm(Long filmId, Long actorId) {
+//    @Transactional
+//    TODO: Check method from repository, start here 29.03
+    public void deleteActorFromFilm(Long filmId, Long actorId) {
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
-        List<Actor> actors = film.getActors();
-        for (Actor actor : actors) {
-            if (actor.getId() == actorId) {
-                actors.remove(actor);
-                break;
-            }
-        }
+        Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
+        film.getActors().remove(actor);
+//        filmRepository.deleteActorsFromFilm(filmId, actorId);
     }
 
     @Override
@@ -195,5 +146,15 @@ public class FilmServiceImpl implements FilmService {
                         film.getId(),
                         film.getTitle()))
                 .collect(Collectors.toList()), pageable, totalElements);
+    }
+
+    private Film prepareFilm(NewFilmRequest newFilmRequest) {
+        return Film.builder()
+                .title(newFilmRequest.getTitle())
+                .description(newFilmRequest.getDescription())
+                .duration(newFilmRequest.getDuration())
+                .boxOffice(newFilmRequest.getBoxoffice())
+                .releaseYear(newFilmRequest.getReleaseYear())
+                .build();
     }
 }

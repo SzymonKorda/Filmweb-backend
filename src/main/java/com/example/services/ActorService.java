@@ -13,8 +13,6 @@ public interface ActorService {
 
     FullActorResponse findActorById(Long actorId);
 
-    Page<SimpleActorResponse> getByFilmId(Pageable pageable, Long filmId);
-
     void deleteActorById(Long actorId);
 
     Actor updateActor(Long actorId, ActorUpdateRequest actorUpdateRequest);

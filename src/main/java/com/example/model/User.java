@@ -66,6 +66,6 @@ public class User extends DateAudit {
             inverseJoinColumns = {@JoinColumn(name = "film_id")}
     )
     @Builder.Default
-    private List<Film> userFilms = new ArrayList<>();
+    private Set<Film> userFilms = new HashSet<>();
 
 }

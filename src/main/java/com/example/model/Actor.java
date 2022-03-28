@@ -6,7 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -47,7 +49,7 @@ public class Actor {
 
     @Builder.Default
     @ManyToMany(mappedBy = "actors", fetch = FetchType.LAZY)
-    private List<Film> films = new ArrayList<>();
+    private Set<Film> films = new HashSet<>();
 
 }
 

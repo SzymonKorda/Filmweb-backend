@@ -1,5 +1,6 @@
 package com.example.services;
 
+import com.example.mapper.ActorMapper;
 import com.example.specification.ActorSpecification;
 import com.example.exceptions.ResourceNotFoundException;
 import com.example.model.Actor;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -88,12 +90,7 @@ public class ActorServiceImpl implements ActorService {
 
         return new PageImpl<>(actorsListPage
                 .stream()
-                .map(person -> new SimpleActorResponse(
-                        person.getId(),
-                        person.getFirstName(),
-                        person.getLastName(),
-                        person.getHeight(),
-                        person.getBornYear()))
+                .map(ActorMapper::mapActorToSimpleActorResponse)
                 .collect(Collectors.toList()), pageable, totalElements);
     }
 
@@ -114,26 +111,6 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public Page<SimpleActorResponse> getByFilmId(Pageable pageable, Long filmId) {
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
-        List<Actor> actors = film.getActors();
-        Page<Actor> actorPage = new PageImpl<>(actors);
-        int totalElements = (int) actorPage.getTotalElements();
-
-        return new PageImpl<>(actorPage
-                .stream()
-                .map(actor -> new SimpleActorResponse(
-                        actor.getId(),
-                        actor.getFirstName(),
-                        actor.getLastName(),
-                        actor.getHeight(),
-                        actor.getBornYear()
-                ))
-                .collect(Collectors.toList()), pageable, totalElements);
-
-    }
-
-    @Override
     @Transactional
     public void addFilmToActor(Long actorId, Long filmId) {
         Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "id", actorId));
@@ -147,7 +124,7 @@ public class ActorServiceImpl implements ActorService {
     public void deleteActorFilm(Long actorId, Long filmId) {
         Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "Id", actorId));
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
-        List<Film> films = actor.getFilms();
+        Set<Film> films = actor.getFilms();
         for (Film film1 : films) {
             if (film1.getId() == filmId) {
                 films.remove(film1);

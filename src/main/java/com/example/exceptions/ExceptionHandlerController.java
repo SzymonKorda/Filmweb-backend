@@ -1,4 +1,4 @@
-package com.example.controllers;
+package com.example.exceptions;
 
 import com.example.exceptions.ResourceNotFoundException;
 import com.example.exceptions.UniqueConstraintException;
@@ -51,7 +51,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public void constraintViolationException(HttpServletResponse response) throws IOException {
-        System.out.println("TUTAJ JESTEM");
         response.sendError(HttpStatus.NOT_FOUND.value());
     }
 

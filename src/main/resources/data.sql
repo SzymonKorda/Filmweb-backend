@@ -124,6 +124,62 @@ VALUES ('Piękny umysł',
         135,
         'Geniusz matematyczny John Nash za wszelką cenę pragnie opracować teorię, dzięki której zostanie cenionym naukowcem. Przeszkodą staje się jego stopniowo rozwijająca choroba.',
         2001);
+
+INSERT INTO film (title, box_office, duration, description, release_year)
+VALUES ('Test1',
+        313542341,
+        135,
+        'Geniusz matematyczny John Nash za wszelką cenę pragnie opracować teorię, dzięki której zostanie cenionym naukowcem. Przeszkodą staje się jego stopniowo rozwijająca choroba.',
+        2001);
+
+INSERT INTO film (title, box_office, duration, description, release_year)
+VALUES ('Test2',
+        313542341,
+        135,
+        'Geniusz matematyczny John Nash za wszelką cenę pragnie opracować teorię, dzięki której zostanie cenionym naukowcem. Przeszkodą staje się jego stopniowo rozwijająca choroba.',
+        2001);
+
+INSERT INTO film (title, box_office, duration, description, release_year)
+VALUES ('Test3',
+        313542341,
+        135,
+        'Geniusz matematyczny John Nash za wszelką cenę pragnie opracować teorię, dzięki której zostanie cenionym naukowcem. Przeszkodą staje się jego stopniowo rozwijająca choroba.',
+        2001);
+
+INSERT INTO film (title, box_office, duration, description, release_year)
+VALUES ('Test4',
+        313542341,
+        135,
+        'Geniusz matematyczny John Nash za wszelką cenę pragnie opracować teorię, dzięki której zostanie cenionym naukowcem. Przeszkodą staje się jego stopniowo rozwijająca choroba.',
+        2001);
+
+INSERT INTO film (title, box_office, duration, description, release_year)
+VALUES ('Test5',
+        313542341,
+        135,
+        'Geniusz matematyczny John Nash za wszelką cenę pragnie opracować teorię, dzięki której zostanie cenionym naukowcem. Przeszkodą staje się jego stopniowo rozwijająca choroba.',
+        2001);
+
+INSERT INTO film (title, box_office, duration, description, release_year)
+VALUES ('Test6',
+        313542341,
+        135,
+        'Geniusz matematyczny John Nash za wszelką cenę pragnie opracować teorię, dzięki której zostanie cenionym naukowcem. Przeszkodą staje się jego stopniowo rozwijająca choroba.',
+        2001);
+
+INSERT INTO film (title, box_office, duration, description, release_year)
+VALUES ('Test7',
+        313542341,
+        135,
+        'Geniusz matematyczny John Nash za wszelką cenę pragnie opracować teorię, dzięki której zostanie cenionym naukowcem. Przeszkodą staje się jego stopniowo rozwijająca choroba.',
+        2001);
+
+INSERT INTO film (title, box_office, duration, description, release_year)
+VALUES ('Test8',
+        313542341,
+        135,
+        'Geniusz matematyczny John Nash za wszelką cenę pragnie opracować teorię, dzięki której zostanie cenionym naukowcem. Przeszkodą staje się jego stopniowo rozwijająca choroba.',
+        2001);
 -- --
 -- --
 -- --
@@ -271,10 +327,11 @@ VALUES ('Christoph',
         1956,
         'Wiedeń, Austria');
 
+
 INSERT INTO roles(name)
 VALUES ('ROLE_USER');
 INSERT INTO roles(name)
 VALUES ('ROLE_ADMIN');
 
--- INSERT INTO users(email, name, password, username) VALUES('admin@gmail.com', Admin Admin, password12, admin);
--- INSERT INTO user_roles(user_id, role_id) VALUES(1, 2);
+-- INSERT INTO users(email, name, password, username) VALUES('szymon@gmail.com', 'Szymon', 'password', 'Szymon');
+-- INSERT INTO user_roles(user_id, role_id) VALUES(1, 1);

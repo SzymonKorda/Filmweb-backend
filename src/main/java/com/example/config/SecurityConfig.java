@@ -59,6 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -85,8 +86,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/api/auth/**")
                 .permitAll()
-                .antMatchers(HttpMethod.GET, "/films", "/films/{filmId}", "/actors",
-                        "/actors/{actorId}", "/films/{filmId}/comments", "/films/{filmId}/actors",
+                .antMatchers(HttpMethod.GET, "/api/films", "/api/films/{filmId}", "/actors",
+                        "/actors/{actorId}", "/films/{filmId}/comments", "/api/films/{filmId}/actors",
                         "/actors/{actorId}/films", "/actors/choices", "/films/choices")
                 .permitAll()
                 .antMatchers( "/v2/api-docs",
@@ -102,6 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest()
                 .authenticated();
+
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }

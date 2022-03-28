@@ -1,5 +1,6 @@
 package com.example.controllers;
 
+import com.example.config.ApiPageable;
 import com.example.specification.FilmSpecification;
 import com.example.payload.*;
 import com.example.security.CurrentUser;
@@ -7,80 +8,89 @@ import com.example.security.UserPrincipal;
 import com.example.services.ActorService;
 import com.example.services.CommentService;
 import com.example.services.FilmService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
+@AllArgsConstructor
 @RestController
+@RequestMapping("/api")
+@Api(tags = "Film")
 public class FilmController {
 
-    private FilmService filmService;
-    private ActorService actorService;
-    private CommentService commentService;
+    private final FilmService filmService;
+    private final ActorService actorService;
+    private final CommentService commentService;
 
-
-    public FilmController(FilmService filmService, ActorService actorService,
-                          CommentService commentService) {
-        this.filmService = filmService;
-        this.actorService = actorService;
-        this.commentService = commentService;
-    }
-
+//    TODO: Describe search parameters, default value and search param to add
+    @ApiOperation(value = "This endpoint allows to retrieve all films with given parameters")
+    @ApiPageable
     @GetMapping("/films")
-    public Page<SimpleFilmResponse> getFilms(FilmSpecification filmSpecification, Pageable pageable) {
-        return filmService.findAllFilms(filmSpecification, pageable);
+    public ResponseEntity<?> getFilms(FilmSpecification filmSpecification, @ApiIgnore Pageable pageable) {
+        Page<SimpleFilmResponse> films = filmService.findAllFilms(filmSpecification, pageable);
+        return new ResponseEntity<>(films, HttpStatus.OK);
     }
-
 
     @GetMapping("films/{filmId}/comments")
     public Page<CommentResponse> getComments(@PathVariable Long filmId, Pageable pageable) {
         return commentService.getByFilmId(pageable, filmId);
     }
 
+    @ApiOperation(value = "This endpoint allows to retrieve all actors for given film")
+    @ApiPageable
     @GetMapping("films/{filmId}/actors")
-    public Page<SimpleActorResponse> getActors(@PathVariable Long filmId, Pageable pageable) {
-        return actorService.getByFilmId(pageable, filmId);
+    public ResponseEntity<?> getFilmActors(@PathVariable Long filmId, @ApiIgnore Pageable pageable) {
+        Page<SimpleActorResponse> actors = filmService.getFilmActors(filmId, pageable);
+        return new ResponseEntity<>(actors, HttpStatus.OK);
     }
 
-
+    @ApiOperation(value = "This endpoint allows to retrieve full film information")
     @GetMapping("/films/{filmId}")
-    public FullFilmResponse getFilm(@PathVariable Long filmId) {
-        return filmService.findFilmById(filmId);
+    public ResponseEntity<?> getFilm(@PathVariable Long filmId) {
+        FullFilmResponse film = filmService.findFilmById(filmId);
+        return new ResponseEntity<>(film, HttpStatus.OK);
     }
 
-
-    @PostMapping("/films")
+    @ApiOperation(value = "This endpoint allows admin to create new film")
     @RolesAllowed("ROLE_ADMIN")
+    @PostMapping("/films")
     public ResponseEntity<?> createFilm(@Valid @RequestBody NewFilmRequest newFilmRequest) {
         filmService.newFilm(newFilmRequest);
-        return ResponseEntity.ok(new ApiResponse(true, "Film Created Successfully"));
+        return new ResponseEntity<>("Film Created successfully", HttpStatus.CREATED);
     }
 
-
-    @PostMapping("/films/{filmId}")
+    @ApiOperation(value = "This endpoint allows admin to update existing film")
     @RolesAllowed("ROLE_ADMIN")
+    @PutMapping("/films/{filmId}")
     public ResponseEntity<?> updateFilm(@PathVariable Long filmId, @Valid @RequestBody FilmUpdateRequest filmUpdateRequest) {
         filmService.updateFilm(filmId, filmUpdateRequest);
-        return ResponseEntity.ok(new ApiResponse(true, "Film updated"));
+        return new ResponseEntity<>("Film updated successfully", HttpStatus.OK);
     }
 
-    @DeleteMapping("films/{filmId}")
+    @ApiOperation(value = "This endpoint allows admin to delete existing film")
     @RolesAllowed("ROLE_ADMIN")
+    @DeleteMapping("/films/{filmId}")
     public ResponseEntity<?> deleteFilm(@PathVariable Long filmId) {
         filmService.deleteFilmById(filmId);
-        return ResponseEntity.ok(new ApiResponse(true, "Film deleted successfully"));
+        return new ResponseEntity<>("Film deleted successfully", HttpStatus.OK);
     }
 
-    @PostMapping("films/{filmId}/actors/{actorId}")
+    @ApiOperation(value = "This endpoint allows to add actor to film")
+    @PostMapping("/films/{filmId}/actors/{actorId}")
     @RolesAllowed("ROLE_ADMIN")
     public ResponseEntity<?> addActorToFilm(@PathVariable Long filmId, @PathVariable Long actorId) {
         filmService.addActorToFilm(filmId, actorId);
-        return ResponseEntity.ok(new ApiResponse(true, "Actor added to film successfully"));
+        return new ResponseEntity<>("Actor added to film successfully", HttpStatus.OK);
     }
 
     @PostMapping("films/{filmId}/comments")
@@ -99,8 +109,8 @@ public class FilmController {
 
     @DeleteMapping("/films/{filmId}/actors/{actorId}")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
-    public ResponseEntity<?> deleteActorFilm(@PathVariable Long filmId, @PathVariable Long actorId) {
-        filmService.deleteActorFilm(filmId, actorId);
+    public ResponseEntity<?> deleteActorFromFilm(@PathVariable Long filmId, @PathVariable Long actorId) {
+        filmService.deleteActorFromFilm(filmId, actorId);
         return ResponseEntity.ok(new ApiResponse(true, "Film's actor deleted successfully"));
     }
 

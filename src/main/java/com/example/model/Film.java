@@ -6,7 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -53,15 +55,15 @@ public class Film {
             inverseJoinColumns = {@JoinColumn(name = "actor_id")}
     )
     @Builder.Default
-    private List<Actor> actors = new ArrayList<>();
+    private Set<Actor> actors = new HashSet<>();
 
     @Builder.Default
     @ManyToMany(mappedBy = "userFilms")
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
 
     @Builder.Default
     @OneToMany
     @JoinColumn(name = "film_id")
-    private List<Comment> comments = new ArrayList<>();
+    private Set<Comment> comments = new HashSet<>();
 
 }

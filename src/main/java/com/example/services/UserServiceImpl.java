@@ -1,5 +1,6 @@
 package com.example.services;
 
+import com.example.mapper.FilmMapper;
 import com.example.specification.FilmSpecification;
 import com.example.exceptions.ResourceNotFoundException;
 import com.example.model.Film;
@@ -14,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,13 +41,18 @@ public class UserServiceImpl implements UserService {
         userProfileResponse.setUsername(user.getUsername());
         userProfileResponse.setEmail(user.getEmail());
 
-        for (Film film : user.getUserFilms()) {
-            SimpleFilmResponse simpleFilmResponse = new SimpleFilmResponse();
-            simpleFilmResponse.setId(film.getId());
-            simpleFilmResponse.setTitle(film.getTitle());
-            simpleFilmResponse.setDuration(film.getDuration());
-            userProfileResponse.getUserFilms().add(simpleFilmResponse);
-        }
+        user.getUserFilms().stream()
+                .map(FilmMapper::mapFilmToSimpleFilmResponse)
+                .forEach(film -> userProfileResponse.getUserFilms().add(film));
+
+
+//        for (Film film : user.getUserFilms()) {
+//            SimpleFilmResponse simpleFilmResponse = new SimpleFilmResponse();
+//            simpleFilmResponse.setId(film.getId());
+//            simpleFilmResponse.setTitle(film.getTitle());
+//            simpleFilmResponse.setDuration(film.getDuration());
+//            userProfileResponse.getUserFilms().add(simpleFilmResponse);
+//        }
 
         return userProfileResponse;
     }
@@ -52,19 +60,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<SimpleFilmResponse> getUserFilms(FilmSpecification filmSpecification, Pageable pageable, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
-        List<Film> films = user.getUserFilms();
-        Page<Film> filmPage = new PageImpl<>(films);
+        Set<Film> films = user.getUserFilms();
+        Page<Film> filmPage = new PageImpl<>(new ArrayList<>(films));
 
         int totalElements = (int) filmPage.getTotalElements();
 
         return new PageImpl<>(filmPage
                 .stream()
-                .map(film -> new SimpleFilmResponse(
-                        film.getId(),
-                        film.getTitle(),
-                        film.getReleaseYear(),
-                        film.getDuration()
-                ))
+                .map(FilmMapper::mapFilmToSimpleFilmResponse)
                 .collect(Collectors.toList()), pageable, totalElements);
     }
 
@@ -72,7 +75,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUserFilmById(Long filmId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
-        List<Film> films = user.getUserFilms();
+        Set<Film> films = user.getUserFilms();
         for (Film film : films) {
             if (film.getId() == filmId) {
                 films.remove(film);
