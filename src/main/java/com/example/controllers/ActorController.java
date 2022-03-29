@@ -1,82 +1,95 @@
 package com.example.controllers;
 
+import com.example.config.ApiPageable;
 import com.example.specification.ActorSpecification;
 import com.example.payload.*;
 import com.example.services.ActorService;
 import com.example.services.FilmService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
+@AllArgsConstructor
 @RestController
+@RequestMapping("/api")
+@Api(tags = "Actor")
 public class ActorController {
 
-    private ActorService actorService;
-    private FilmService filmService;
+    private final ActorService actorService;
 
-    public ActorController(ActorService actorService, FilmService filmService) {
-        this.actorService = actorService;
-        this.filmService = filmService;
-    }
-
-    @PostMapping("/actors")
+    @ApiOperation(value = "This endpoint allows to create new actor")
     @RolesAllowed("ROLE_ADMIN")
+    @PostMapping("/actors")
     public ResponseEntity<?> createActor(@Valid @RequestBody NewActorRequest newActorRequest) {
         actorService.newActor(newActorRequest);
-        return ResponseEntity.ok(new ApiResponse(true, "Actor Created Successfully"));
+        return new ResponseEntity<>("Actor Created Successfully", HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "This endpoint allows to delete actor")
+    @RolesAllowed("ROLE_ADMIN")
     @DeleteMapping("/actors/{actorId}")
-    @RolesAllowed("ROLE_ADMIN")
     public ResponseEntity<?> deleteActor(@PathVariable Long actorId) {
-        actorService.deleteActorById(actorId);
-        return ResponseEntity.ok(new ApiResponse(true, "Actor deleted successfully"));
+        actorService.deleteActor(actorId);
+        return new ResponseEntity<>("Actor deleted successfully", HttpStatus.OK);
     }
 
-    @PostMapping("/actors/{actorId}")
+    @ApiOperation(value = "This endpoint allows to update actor")
     @RolesAllowed("ROLE_ADMIN")
+    @PutMapping("/actors/{actorId}")
     public ResponseEntity<?> updateActor(@PathVariable Long actorId, @Valid @RequestBody ActorUpdateRequest actorUpdateRequest) {
         actorService.updateActor(actorId, actorUpdateRequest);
-        return ResponseEntity.ok(new ApiResponse(true, "Actor updated"));
+        return new ResponseEntity<>("Actor updated successfully", HttpStatus.OK);
     }
 
+    @ApiOperation(value = "This endpoint allows to retrieve all actors with given parameters")
+    @ApiImplicitParam(name = "search", allowMultiple = true, dataType = "string", paramType = "query", value = "Filtering search results by last name")
+    @ApiPageable
     @GetMapping("/actors")
-    public Page<SimpleActorResponse> getActors(ActorSpecification actorSpecification, Pageable pageable) {
-        return actorService.getAllActors(actorSpecification, pageable);
+    public ResponseEntity<?> getActors(ActorSpecification actorSpecification, @ApiIgnore Pageable pageable) {
+        Page<SimpleActorResponse> actors = actorService.getAllActors(actorSpecification, pageable);
+        return new ResponseEntity<>(actors, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "This endpoint allows to get full actor information")
     @GetMapping("/actors/{actorId}")
-    public FullActorResponse getActor(@PathVariable Long actorId) {
-        return actorService.findActorById(actorId);
+    public ResponseEntity<?> getActor(@PathVariable Long actorId) {
+        FullActorResponse actor = actorService.findActorById(actorId);
+        return new ResponseEntity<>(actor, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "This endpoint allows to retrieve all films for given actor")
+    @ApiPageable
     @GetMapping("/actors/{actorId}/films")
-    public Page<SimpleFilmResponse> getFilms(@PathVariable Long actorId, Pageable pageable) {
-        return filmService.getByActorId(pageable, actorId);
+    public ResponseEntity<?> getActorFilms(@PathVariable Long actorId, @ApiIgnore Pageable pageable) {
+        Page<SimpleFilmResponse> films = actorService.getActorFilms(actorId, pageable);
+        return new ResponseEntity<>(films, HttpStatus.OK);
     }
 
-    @PostMapping("/actors/{actorId}/films/{filmId}")
+    @ApiOperation(value = "This endpoint allows to add film to actor")
     @RolesAllowed("ROLE_ADMIN")
+    @PostMapping("/actors/{actorId}/films/{filmId}")
     public ResponseEntity<?> addFilmToActor(@PathVariable Long actorId, @PathVariable Long filmId) {
         actorService.addFilmToActor(actorId, filmId);
-        return ResponseEntity.ok(new ApiResponse(true, "Film added to actor successfully"));
+        return new ResponseEntity<>("Film added to actor successfully", HttpStatus.OK);
     }
 
-    @DeleteMapping("/actors/{actorId}/films/{filmId}")
+    @ApiOperation(value = "This endpoint allows to delete film from actor")
     @RolesAllowed("ROLE_ADMIN")
+    @DeleteMapping("/actors/{actorId}/films/{filmId}")
     public ResponseEntity<?> deleteFilmActor(@PathVariable Long actorId, @PathVariable Long filmId) {
         actorService.deleteActorFilm(actorId, filmId);
-        return ResponseEntity.ok(new ApiResponse(true, "Actor's films deleted successfully"));
+        return new ResponseEntity<>("Film deleted from actor successfully", HttpStatus.OK);
     }
-
-    @GetMapping("/actors/choices")
-    public Page<ActorChoiceResponse> getActorsChoices(ActorSpecification actorSpecification, Pageable pageable) {
-        return actorService.getActorsChoices(actorSpecification, pageable);
-    }
-
 
 }
+

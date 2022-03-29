@@ -86,9 +86,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/api/auth/**")
                 .permitAll()
-                .antMatchers(HttpMethod.GET, "/api/films", "/api/films/{filmId}", "/actors",
-                        "/actors/{actorId}", "/api//films/{filmId}/comments", "/api/films/{filmId}/actors",
-                        "/actors/{actorId}/films", "/actors/choices", "/films/choices")
+                .antMatchers(HttpMethod.GET, "/api/films", "/api/films/{filmId}", "/api/actors",
+                        "/api/actors/{actorId}", "/api//films/{filmId}/comments", "/api/films/{filmId}/actors",
+                        "/api/actors/{actorId}/films", "/actors/choices", "/films/choices")
                 .permitAll()
                 .antMatchers( "/v2/api-docs",
                         "/swagger-resources",

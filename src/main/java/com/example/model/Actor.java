@@ -18,7 +18,6 @@ import java.util.Set;
 @Entity
 @Table(name = "actor")
 public class Actor {
-
     @Id
     @Column(name = "actor_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

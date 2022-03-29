@@ -12,6 +12,5 @@ import java.util.Optional;
 
 @Repository
 public interface FilmRepository extends JpaRepository<Film, Long>, JpaSpecificationExecutor<Film> {
-    Optional<Film> findByTitle(String title);
-//    void deleteActorsFromFilm(Long filmId, Long actorId);
+    Page<Film> findAllByActors(Actor actor, Pageable pageable);
 }

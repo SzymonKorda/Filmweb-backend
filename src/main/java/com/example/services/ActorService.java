@@ -7,19 +7,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ActorService {
-    Actor newActor(NewActorRequest newActorRequest);
-
+    void newActor(NewActorRequest newActorRequest);
     Page<SimpleActorResponse> getAllActors(ActorSpecification actorSpecification, Pageable pageable);
-
     FullActorResponse findActorById(Long actorId);
-
-    void deleteActorById(Long actorId);
-
-    Actor updateActor(Long actorId, ActorUpdateRequest actorUpdateRequest);
-
+    void deleteActor(Long actorId);
+    void updateActor(Long actorId, ActorUpdateRequest actorUpdateRequest);
+    Page<SimpleFilmResponse> getActorFilms(Long actorId, Pageable pageable);
     void addFilmToActor(Long actorId, Long filmId);
-
     void deleteActorFilm(Long actorId, Long filmId);
-
-    Page<ActorChoiceResponse> getActorsChoices(ActorSpecification actorSpecification, Pageable pageable);
 }

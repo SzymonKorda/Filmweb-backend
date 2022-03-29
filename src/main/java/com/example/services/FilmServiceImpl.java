@@ -116,19 +116,6 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public Page<SimpleFilmResponse> getByActorId(Pageable pageable, Long actorId) {
-        Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "Id", actorId));
-        Set<Film> films = actor.getFilms();
-        Page<Film> filmPage = new PageImpl<>(new ArrayList<>(films));
-        int totalElements = (int) filmPage.getTotalElements();
-
-        return new PageImpl<>(filmPage
-                .stream()
-                .map(FilmMapper::mapFilmToSimpleFilmResponse)
-                .collect(Collectors.toList()), pageable, totalElements);
-    }
-
-    @Override
     @Transactional
     public void addFilmToUser(UserPrincipal currentUser, Long filmId) {
         User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "Id", currentUser.getId()));

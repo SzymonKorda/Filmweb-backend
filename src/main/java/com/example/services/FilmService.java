@@ -17,7 +17,6 @@ public interface FilmService {
     void addActorToFilm(Long filmId, Long actorId);
     void addCommentToFilm(UserPrincipal currentUser, Long filmId, NewCommentRequest newCommentRequest);
     void addFilmToUser(UserPrincipal currentUser, Long filmId);
-    Page<SimpleFilmResponse> getByActorId(Pageable pageable, Long actorId);
     void deleteActorFromFilm(Long filmId, Long actorId);
     Page<SimpleActorResponse> getFilmActors(Long filmId, Pageable pageable);
 

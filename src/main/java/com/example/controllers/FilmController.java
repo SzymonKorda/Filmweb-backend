@@ -85,24 +85,24 @@ public class FilmController {
     }
 
     @ApiOperation(value = "This endpoint allows to add actor to film")
-    @PostMapping("/films/{filmId}/actors/{actorId}")
     @RolesAllowed("ROLE_ADMIN")
+    @PostMapping("/films/{filmId}/actors/{actorId}")
     public ResponseEntity<?> addActorToFilm(@PathVariable Long filmId, @PathVariable Long actorId) {
         filmService.addActorToFilm(filmId, actorId);
         return new ResponseEntity<>("Actor added to film successfully", HttpStatus.OK);
     }
 
     @ApiOperation(value = "This endpoint allows to add comment to film")
-    @PostMapping("/films/{filmId}/comments")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    @PostMapping("/films/{filmId}/comments")
     public ResponseEntity<?> addCommentToFilm(@ApiIgnore @CurrentUser UserPrincipal currentUser, @PathVariable Long filmId, @Valid @RequestBody NewCommentRequest newCommentRequest) {
         filmService.addCommentToFilm(currentUser, filmId, newCommentRequest);
         return new ResponseEntity<>("Comment added to film successfully", HttpStatus.OK);
     }
 
     @ApiOperation(value = "This endpoint allows to delete actor from film")
-    @DeleteMapping("/films/{filmId}/actors/{actorId}")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    @DeleteMapping("/films/{filmId}/actors/{actorId}")
     public ResponseEntity<?> deleteActorFromFilm(@PathVariable Long filmId, @PathVariable Long actorId) {
         filmService.deleteActorFromFilm(filmId, actorId);
         return new ResponseEntity<>("Actor deleted from film successfully", HttpStatus.OK);
