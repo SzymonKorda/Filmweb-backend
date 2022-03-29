@@ -1,5 +1,7 @@
 package com.example.controllers;
 
+import com.example.security.CurrentUser;
+import com.example.security.UserPrincipal;
 import com.example.specification.FilmSpecification;
 import com.example.payload.ApiResponse;
 import com.example.payload.SimpleFilmResponse;
@@ -41,6 +43,13 @@ public class UserController {
     public ResponseEntity<?> deleteUserFilm(@PathVariable Long userId, @PathVariable Long filmId) {
         userService.deleteUserFilmById(filmId, userId);
         return ResponseEntity.ok(new ApiResponse(true, "User's film deleted successfully"));
+    }
+
+    @PostMapping("/films/{filmId}/favourites")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<?> addFilmToUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long filmId) {
+        filmService.addFilmToUser(currentUser, filmId);
+        return ResponseEntity.ok(new ApiResponse(true, "Film added to user successfully"));
     }
 
 }

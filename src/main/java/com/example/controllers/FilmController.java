@@ -1,14 +1,13 @@
 package com.example.controllers;
 
 import com.example.config.ApiPageable;
-import com.example.specification.FilmSpecification;
 import com.example.payload.*;
 import com.example.security.CurrentUser;
 import com.example.security.UserPrincipal;
-import com.example.services.ActorService;
-import com.example.services.CommentService;
 import com.example.services.FilmService;
+import com.example.specification.FilmSpecification;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
@@ -29,11 +27,9 @@ import javax.validation.Valid;
 public class FilmController {
 
     private final FilmService filmService;
-    private final ActorService actorService;
-    private final CommentService commentService;
 
-//    TODO: Describe search parameters, default value and search param to add
     @ApiOperation(value = "This endpoint allows to retrieve all films with given parameters")
+    @ApiImplicitParam(name = "search", allowMultiple = true, dataType = "string", paramType = "query", value = "Filtering search results by title")
     @ApiPageable
     @GetMapping("/films")
     public ResponseEntity<?> getFilms(FilmSpecification filmSpecification, @ApiIgnore Pageable pageable) {
@@ -41,14 +37,17 @@ public class FilmController {
         return new ResponseEntity<>(films, HttpStatus.OK);
     }
 
-    @GetMapping("films/{filmId}/comments")
-    public Page<CommentResponse> getComments(@PathVariable Long filmId, Pageable pageable) {
-        return commentService.getByFilmId(pageable, filmId);
+    @ApiOperation(value = "This endpoint allows to retrieve comments for given film")
+    @ApiPageable
+    @GetMapping("/films/{filmId}/comments")
+    public ResponseEntity<?> getFilmComments(@PathVariable Long filmId, @ApiIgnore Pageable pageable) {
+        Page<CommentResponse> comments = filmService.getFilmComments(filmId, pageable);
+        return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
     @ApiOperation(value = "This endpoint allows to retrieve all actors for given film")
     @ApiPageable
-    @GetMapping("films/{filmId}/actors")
+    @GetMapping("/films/{filmId}/actors")
     public ResponseEntity<?> getFilmActors(@PathVariable Long filmId, @ApiIgnore Pageable pageable) {
         Page<SimpleActorResponse> actors = filmService.getFilmActors(filmId, pageable);
         return new ResponseEntity<>(actors, HttpStatus.OK);
@@ -93,31 +92,22 @@ public class FilmController {
         return new ResponseEntity<>("Actor added to film successfully", HttpStatus.OK);
     }
 
-    @PostMapping("films/{filmId}/comments")
+    @ApiOperation(value = "This endpoint allows to add comment to film")
+    @PostMapping("/films/{filmId}/comments")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
-    public ResponseEntity<?> addCommentToFilm(@CurrentUser UserPrincipal currentUser, @PathVariable Long filmId, @Valid @RequestBody NewCommentRequest newCommentRequest) {
+    public ResponseEntity<?> addCommentToFilm(@ApiIgnore @CurrentUser UserPrincipal currentUser, @PathVariable Long filmId, @Valid @RequestBody NewCommentRequest newCommentRequest) {
         filmService.addCommentToFilm(currentUser, filmId, newCommentRequest);
-        return ResponseEntity.ok(new ApiResponse(true, "Comment added to film successfully"));
+        return new ResponseEntity<>("Comment added to film successfully", HttpStatus.OK);
     }
 
-    @PostMapping("/films/{filmId}/favourites")
-    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
-    public ResponseEntity<?> addFilmToUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long filmId) {
-        filmService.addFilmToUser(currentUser, filmId);
-        return ResponseEntity.ok(new ApiResponse(true, "Film added to user successfully"));
-    }
-
+    @ApiOperation(value = "This endpoint allows to delete actor from film")
     @DeleteMapping("/films/{filmId}/actors/{actorId}")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> deleteActorFromFilm(@PathVariable Long filmId, @PathVariable Long actorId) {
         filmService.deleteActorFromFilm(filmId, actorId);
-        return ResponseEntity.ok(new ApiResponse(true, "Film's actor deleted successfully"));
+        return new ResponseEntity<>("Actor deleted from film successfully", HttpStatus.OK);
     }
 
-    @GetMapping("/films/choices")
-    public Page<FilmChoiceResponse> getFilmsChoices(FilmSpecification filmSpecification, Pageable pageable) {
-        return filmService.getFilmsChoices(filmSpecification, pageable);
-    }
 }
 
 

@@ -1,6 +1,7 @@
 package com.example.services;
 
 import com.example.mapper.ActorMapper;
+import com.example.mapper.CommentMapper;
 import com.example.mapper.FilmMapper;
 import com.example.specification.FilmSpecification;
 import com.example.exceptions.ResourceNotFoundException;
@@ -22,6 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -92,17 +95,24 @@ public class FilmServiceImpl implements FilmService {
 
 
     @Override
-    @Transactional
     public void addCommentToFilm(UserPrincipal currentUser, Long filmId, NewCommentRequest newCommentRequest) {
-        Comment comment = new Comment();
-        comment.setFilmId(filmId);
-        comment.setUser(currentUser.getUser());
-        comment.setContent(newCommentRequest.getContent());
-
-        commentRepository.save(comment);
-
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
-        film.getComments().add(comment);
+        Comment comment = Comment.builder()
+                .film(film)
+                .user(currentUser.getUser())
+                .content(newCommentRequest.getContent())
+                .build();
+        commentRepository.save(comment);
+    }
+
+    @Override
+    public Page<CommentResponse> getFilmComments(Long filmId, Pageable pageable) {
+        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
+        Page<Comment> commentListPage = commentRepository.findAllByFilm(film, pageable);
+        return new PageImpl<>(commentListPage
+                .stream()
+                .map(CommentMapper::mapCommentToCommentResponse)
+                .collect(Collectors.toList()), pageable, commentListPage.getTotalElements());
     }
 
     @Override
@@ -127,25 +137,11 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-//    @Transactional
-//    TODO: Check method from repository, start here 29.03
     public void deleteActorFromFilm(Long filmId, Long actorId) {
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
         Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
         film.getActors().remove(actor);
-//        filmRepository.deleteActorsFromFilm(filmId, actorId);
-    }
-
-    @Override
-    public Page<FilmChoiceResponse> getFilmsChoices(FilmSpecification filmSpecification, Pageable pageable) {
-        Page<Film> filmsListPage = filmRepository.findAll(filmSpecification, pageable);
-        int totalElements = (int) filmsListPage.getTotalElements();
-        return new PageImpl<>(filmsListPage
-                .stream()
-                .map(film -> new FilmChoiceResponse(
-                        film.getId(),
-                        film.getTitle()))
-                .collect(Collectors.toList()), pageable, totalElements);
+        filmRepository.save(film);
     }
 
     private Film prepareFilm(NewFilmRequest newFilmRequest) {

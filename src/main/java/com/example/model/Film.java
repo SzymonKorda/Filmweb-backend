@@ -10,7 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +23,6 @@ import java.util.Set;
         }
 )})
 public class Film {
-
     @Id
     @Column(name = "film_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,8 +62,7 @@ public class Film {
     private Set<User> users = new HashSet<>();
 
     @Builder.Default
-    @OneToMany
-    @JoinColumn(name = "film_id")
+    @OneToMany(mappedBy = "film")
     private Set<Comment> comments = new HashSet<>();
 
 }

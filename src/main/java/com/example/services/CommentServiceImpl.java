@@ -28,24 +28,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Page<CommentResponse> getByFilmId(Pageable pageable, Long filmId) {
-        Page<Comment> commentList = commentRepository.findByFilmId(pageable, filmId);
-        int totalElements = (int) commentList.getTotalElements();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-
-        return new PageImpl<>(commentList
-                .stream()
-                .map(comment -> new CommentResponse(
-                        comment.getId(),
-                        comment.getUser().getUsername(),
-                        comment.getContent(),
-                        formatter.format(Date.from(comment.getCreatedAt()))
-                ))
-                .collect(Collectors.toList()), pageable, totalElements);
-
-    }
-
-    @Override
     public void deleteCommentById(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
                 new ResourceNotFoundException("Comment", "id", commentId));

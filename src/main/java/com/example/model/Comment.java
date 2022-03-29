@@ -8,23 +8,23 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "comment")
 public class Comment extends DateAudit {
-
     @Id
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @Column(name = "film_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Long filmId;
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
+    @JoinColumn(name = "film_id")
+    private Film film;
 
     @NotBlank
     private String content;
