@@ -17,5 +17,5 @@ public interface ActorService {
     void updateActor(Long actorId, ActorUpdateRequest actorUpdateRequest);
     Page<SimpleFilmResponse> getActorFilms(Long actorId, Pageable pageable);
     void addFilmToActor(Long actorId, Long filmId);
-    void deleteActorFilm(Long actorId, Long filmId);
+    void deleteFilmFromActor(Long actorId, Long filmId);
 }

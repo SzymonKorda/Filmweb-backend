@@ -21,11 +21,12 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @ApiOperation(value = "This endpoint allows to delete comment")
+    @ApiOperation(value = "This endpoint allows to delete comment",
+            notes = "Admin rights needed to access this resource")
     @RolesAllowed("ROLE_ADMIN")
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
         commentService.deleteCommentById(commentId);
-        return new ResponseEntity<>("Comment deleted successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Comment deleted successfully!", HttpStatus.OK);
     }
 }

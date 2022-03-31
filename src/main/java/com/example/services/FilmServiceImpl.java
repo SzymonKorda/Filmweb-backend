@@ -37,7 +37,7 @@ public class FilmServiceImpl implements FilmService {
     private final CommentRepository commentRepository;
 
     @Override
-    public Page<SimpleFilmResponse> findAllFilms(FilmSpecification filmSpecification, Pageable pageable) {
+    public Page<SimpleFilmResponse> getAllFilms(FilmSpecification filmSpecification, Pageable pageable) {
         Page<Film> filmsListPage = filmRepository.findAll(filmSpecification, pageable);
         return new PageImpl<>(filmsListPage
                 .stream()
@@ -61,7 +61,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public void deleteFilmById(Long filmId) {
+    public void deleteFilm(Long filmId) {
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
         filmRepository.delete(film);
     }

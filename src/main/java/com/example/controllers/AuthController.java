@@ -21,24 +21,27 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @ApiOperation(value = "This endpoint allows to register new user account")
+    @ApiOperation(value = "This endpoint allows to register new user's account",
+            notes = "No authorization needed to access this resource")
     @PostMapping("/auth/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         authService.registerUser(registerRequest);
         return new ResponseEntity<>("User registered successfully!", HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "This endpoint allows user to log into the application")
+    @ApiOperation(value = "This endpoint allows to log into the application",
+            notes = "No authorization needed to access this resource")
     @PostMapping("/auth/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        JwtAuthenticationResponse jwrResponse = authService.authenticateUser(loginRequest);
-        return new ResponseEntity<>(jwrResponse, HttpStatus.OK);
+        JwtAuthenticationResponse jwtResponse = authService.authenticateUser(loginRequest);
+        return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "This endpoint allows to grant admin rights for user (Endpoint created for testing)")
+    @ApiOperation(value = "This endpoint allows to grant Admin rights for User (Endpoint created for testing purposes)",
+            notes = "No authorization needed to access this resource")
     @PatchMapping("/auth/users/{userId}")
-    public ResponseEntity<?> makeAdmin(@PathVariable Long userId) {
-        authService.makeAdmin(userId);
+    public ResponseEntity<?> grantAdminRightsToUser(@PathVariable Long userId) {
+        authService.grantAdminRightsToUser(userId);
         return new ResponseEntity<>("User granted admin rights successfully!", HttpStatus.OK);
     }
 

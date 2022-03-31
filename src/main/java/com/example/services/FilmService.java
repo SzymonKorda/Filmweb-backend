@@ -14,10 +14,10 @@ import org.springframework.data.domain.Pageable;
 
 public interface FilmService {
     Page<CommentResponse> getFilmComments(Long filmId, Pageable pageable);
-    Page<SimpleFilmResponse> findAllFilms(FilmSpecification filmSpecification, Pageable pageable);
+    Page<SimpleFilmResponse> getAllFilms(FilmSpecification filmSpecification, Pageable pageable);
     void newFilm(NewFilmRequest newFilmRequest);
     void updateFilm(Long filmId, FilmUpdateRequest filmUpdateRequest);
-    void deleteFilmById(Long filmId);
+    void deleteFilm(Long filmId);
     FullFilmResponse findFilmById(Long filmId);
     void addActorToFilm(Long filmId, Long actorId);
     void addCommentToFilm(UserPrincipal currentUser, Long filmId, NewCommentRequest newCommentRequest);

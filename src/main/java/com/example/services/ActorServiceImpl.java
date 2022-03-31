@@ -80,7 +80,7 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public void deleteActorFilm(Long actorId, Long filmId) {
+    public void deleteFilmFromActor(Long actorId, Long filmId) {
         Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "Id", actorId));
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
         actor.getFilms().remove(film);

@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void makeAdmin(Long userId) {
+    public void grantAdminRightsToUser(Long userId) {
         Role userRole = roleRepository
                 .findByName(RoleName.ROLE_ADMIN)
                 .orElseThrow(() -> new AppException("User Role not set."));

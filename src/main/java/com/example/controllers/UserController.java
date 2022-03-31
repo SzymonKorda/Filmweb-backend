@@ -24,15 +24,17 @@ public class UserController {
 
     private final UserService userService;
 
-    @ApiOperation(value = "This endpoint allows to retrieve information about user")
-    @RolesAllowed("ROLE_USER")
+    @ApiOperation(value = "This endpoint allows to retrieve information about user",
+            notes = "User or Admin rights needed to access this resource")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/users/{userId}")
     public ResponseEntity<?> getUserProfile(@PathVariable Long userId) {
         UserProfileResponse profile = userService.findUserById(userId);
         return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "This endpoint allows to retrieve all favourite films from user")
+    @ApiOperation(value = "This endpoint allows to retrieve all favourite films for given user",
+            notes = "User or Admin rights needed to access this resource")
     @ApiPageable
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/users/{userId}/films")
@@ -41,20 +43,22 @@ public class UserController {
         return new ResponseEntity<>(films, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "This endpoint allows to delete film from user's favourites")
+    @ApiOperation(value = "This endpoint allows to delete film from user's favourites",
+            notes = "User or Admin rights needed to access this resource")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     @DeleteMapping("/users/{userId}/films/{filmId}")
     public ResponseEntity<?> deleteFilmFromUser(@PathVariable Long userId, @PathVariable Long filmId) {
         userService.deleteFilmFromUser(filmId, userId);
-        return new ResponseEntity<>("User's film deleted successfully", HttpStatus.OK);
+        return new ResponseEntity<>("User's film deleted successfully!", HttpStatus.OK);
     }
 
-    @ApiOperation(value = "This endpoint allows to add film to user favourites")
+    @ApiOperation(value = "This endpoint allows to add film to user's favourites",
+            notes = "User or Admin rights needed to access this resource")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     @PostMapping("/users/{userId}/films/{filmId}")
     public ResponseEntity<?> addFilmToUser(@PathVariable Long userId, @PathVariable Long filmId) {
         userService.addFilmToUser(userId, filmId);
-        return new ResponseEntity<>("Film added to user successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Film added to user successfully!", HttpStatus.OK);
     }
 
 }
