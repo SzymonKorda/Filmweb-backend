@@ -38,6 +38,14 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<DefaultErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException exception) {
+        DefaultErrorResponse errors = new DefaultErrorResponse();
+        errors.setError(exception.getMessage());
+        errors.setStatus(HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(UniqueConstraintException.class)
     public ResponseEntity<DefaultErrorResponse> handleUniqueConstraintException(UniqueConstraintException exception) {
