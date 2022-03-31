@@ -28,23 +28,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileResponse findUserById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-        return UserMapper.mapUserToUserResponse(user);
+        return UserMapper.mapUserToUserResponse(findUser(userId));
     }
 
     @Override
     public void addFilmToUser(Long userId, Long filmId, UserPrincipal currentUser) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
-        validateUser(currentUser, user, "You can't add film to another user's account!");
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
-        user.getUserFilms().add(film);
+        User user = findUser(userId);
+        validateIfCurrentUser(currentUser, user, "You can't add film to another user's account!");
+        user.getUserFilms().add(findFilm(filmId));
         userRepository.save(user);
     }
 
     @Override
     public Page<SimpleFilmResponse> getUserFilms(Pageable pageable, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
-        Page<Film> filmPageList = filmRepository.findAllByUsers(user, pageable);
+        Page<Film> filmPageList = filmRepository.findAllByUsers(findUser(userId), pageable);
         return new PageImpl<>(filmPageList
                 .stream()
                 .map(FilmMapper::mapFilmToSimpleFilmResponse)
@@ -53,16 +50,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteFilmFromUser(Long filmId, Long userId, UserPrincipal currentUser) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
-        validateUser(currentUser, user, "You can't delete film from another user's account!");
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
-        user.getUserFilms().remove(film);
+        User user = findUser(userId);
+        validateIfCurrentUser(currentUser, user, "You can't delete film from another user's account!");
+        user.getUserFilms().remove(findFilm(filmId));
         userRepository.save(user);
     }
 
-    private void validateUser(UserPrincipal currentUser, User user, String error) {
+    private void validateIfCurrentUser(UserPrincipal currentUser, User user, String error) {
         if (user.getId() != currentUser.getId()) {
             throw new AccessDeniedException(error);
         }
+    }
+
+    private User findUser(Long userId) {
+        return userRepository
+                .findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+    }
+
+    private Film findFilm(Long filmId) {
+        return filmRepository
+                .findById(filmId)
+                .orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
     }
 }

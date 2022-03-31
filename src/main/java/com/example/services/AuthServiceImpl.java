@@ -42,12 +42,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtAuthenticationResponse authenticateUser(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsernameOrEmail(),
-                        loginRequest.getPassword()
-                )
-        );
+        Authentication authentication = authenticationManager.authenticate(prepareAuthenticationToken(loginRequest));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         String jwt = tokenProvider.generateToken(authentication);
@@ -56,29 +51,25 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void grantAdminRightsToUser(Long userId, UserPrincipal currentUser) {
-        Role userRole = roleRepository
-                .findByName(RoleName.ROLE_ADMIN)
-                .orElseThrow(() -> new AppException("User Role not set."));
-        User user = userRepository
-                .findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
-        if (user.getId() != currentUser.getId()) {
-            throw new AccessDeniedException("You can't grant admin rights for another user!");
-        }
-        user.getRoles().add(userRole);
+        User user = findUser(userId);
+        validateIfCurrentUser(currentUser, user);
+        user.getRoles().add(findRole(RoleName.ROLE_ADMIN));
         userRepository.save(user);
     }
 
+    private void validateIfCurrentUser(UserPrincipal currentUser, User user) {
+        if (user.getId() != currentUser.getId()) {
+            throw new AccessDeniedException("You can't grant admin rights for another user!");
+        }
+    }
+
     private User createUser(RegisterRequest registerRequest) {
-        Role userRole = roleRepository
-                .findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new AppException("User Role not set."));
         return User.builder()
                 .name(registerRequest.getName())
                 .username(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .roles(Collections.singleton(userRole))
+                .roles(Collections.singleton(findRole(RoleName.ROLE_USER)))
                 .build();
     }
 
@@ -89,5 +80,24 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
             throw new UserAlreadyExistsException("Email address already in use!");
         }
+    }
+
+    private UsernamePasswordAuthenticationToken prepareAuthenticationToken(LoginRequest loginRequest) {
+        return new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsernameOrEmail(),
+                loginRequest.getPassword()
+        );
+    }
+
+    private Role findRole(RoleName roleName) {
+        return roleRepository
+                .findByName(roleName)
+                .orElseThrow(() -> new AppException("User Role not set."));
+    }
+
+    private User findUser(Long userId) {
+        return userRepository
+                .findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
     }
 }

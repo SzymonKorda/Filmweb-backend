@@ -34,14 +34,12 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public void deleteActor(Long actorId) {
-        Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "id", actorId));
-        actorRepository.delete(actor);
+        actorRepository.delete(findActor(actorId));
     }
 
     @Override
     public void updateActor(Long actorId, ActorUpdateRequest actorUpdateRequest) {
-        Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "id", actorId));
-        actorRepository.save(ActorMapper.mapActorUpdateRequestToActor(actorUpdateRequest, actor));
+        actorRepository.save(ActorMapper.mapActorUpdateRequestToActor(actorUpdateRequest, findActor(actorId)));
     }
 
 
@@ -56,8 +54,7 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public Page<SimpleFilmResponse> getActorFilms(Long actorId, Pageable pageable) {
-        Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "Id", actorId));
-        Page<Film> actorsPageList = filmRepository.findAllByActors(actor, pageable);
+        Page<Film> actorsPageList = filmRepository.findAllByActors(findActor(actorId), pageable);
         return new PageImpl<>(actorsPageList
                 .stream()
                 .map(FilmMapper::mapFilmToSimpleFilmResponse)
@@ -66,14 +63,13 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public FullActorResponse findActorById(Long actorId) {
-        Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "Id", actorId));
-        return ActorMapper.mapActorToFullActorResponse(actor);
+        return ActorMapper.mapActorToFullActorResponse(findActor(actorId));
     }
 
     @Override
     public void addFilmToActor(Long actorId, Long filmId) {
-        Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "id", actorId));
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
+        Actor actor = findActor(actorId);
+        Film film = findFilm(filmId);
         actor.getFilms().add(film);
         film.getActors().add(actor);
         actorRepository.save(actor);
@@ -81,11 +77,22 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public void deleteFilmFromActor(Long actorId, Long filmId) {
-        Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "Id", actorId));
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
+        Actor actor = findActor(actorId);
+        Film film = findFilm(filmId);
         actor.getFilms().remove(film);
         film.getActors().remove(actor);
         actorRepository.save(actor);
     }
 
+    private Actor findActor(Long actorId) {
+        return actorRepository
+                .findById(actorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Actor", "id", actorId));
+    }
+
+    private Film findFilm(Long filmId) {
+        return filmRepository
+                .findById(filmId)
+                .orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
+    }
 }
