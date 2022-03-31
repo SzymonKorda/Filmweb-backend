@@ -333,5 +333,6 @@ VALUES ('ROLE_USER');
 INSERT INTO roles(name)
 VALUES ('ROLE_ADMIN');
 
--- INSERT INTO users(email, name, password, username) VALUES('szymon@gmail.com', 'Szymon', 'password', 'Szymon');
--- INSERT INTO user_roles(user_id, role_id) VALUES(1, 1);
+INSERT INTO users(email, name, password, username) VALUES('admin@gmail.com', 'Admin', '$2a$10$NpGC.cRmm7rzlUws/rS3Tu2uvx4VB/oBQx9I3gNNe1dPU9Gmj.BVu', 'Admin');
+INSERT INTO user_roles(user_id, role_id) VALUES(1, 1);
+INSERT INTO user_roles(user_id, role_id) VALUES(1, 2);
