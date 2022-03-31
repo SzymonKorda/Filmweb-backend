@@ -1,8 +1,10 @@
-package com.example.payload;
+package com.example.payload.request;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class ActorUpdateRequest {
     private String firstName;
     private String lastName;

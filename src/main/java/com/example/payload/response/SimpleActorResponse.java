@@ -1,10 +1,12 @@
-package com.example.payload;
+package com.example.payload.response;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
+@AllArgsConstructor
 @Builder
 public class SimpleActorResponse {
     private final Long id;

@@ -1,8 +1,9 @@
-package com.example.payload;
+package com.example.payload.response;
 
 import lombok.*;
 
-@Data
+@Getter
+@AllArgsConstructor
 @Builder
 public class FullActorResponse {
     private final Long id;

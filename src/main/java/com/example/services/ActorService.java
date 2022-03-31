@@ -1,8 +1,11 @@
 package com.example.services;
 
+import com.example.payload.request.ActorUpdateRequest;
+import com.example.payload.request.NewActorRequest;
+import com.example.payload.response.FullActorResponse;
+import com.example.payload.response.SimpleActorResponse;
+import com.example.payload.response.SimpleFilmResponse;
 import com.example.specification.ActorSpecification;
-import com.example.model.Actor;
-import com.example.payload.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

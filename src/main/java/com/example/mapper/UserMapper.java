@@ -1,8 +1,8 @@
 package com.example.mapper;
 
 import com.example.model.User;
-import com.example.payload.SimpleFilmResponse;
-import com.example.payload.UserProfileResponse;
+import com.example.payload.response.SimpleFilmResponse;
+import com.example.payload.response.UserProfileResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;

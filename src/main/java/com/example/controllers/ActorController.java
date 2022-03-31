@@ -1,10 +1,13 @@
 package com.example.controllers;
 
 import com.example.config.ApiPageable;
-import com.example.specification.ActorSpecification;
-import com.example.payload.*;
+import com.example.payload.request.ActorUpdateRequest;
+import com.example.payload.request.NewActorRequest;
+import com.example.payload.response.FullActorResponse;
+import com.example.payload.response.SimpleActorResponse;
+import com.example.payload.response.SimpleFilmResponse;
 import com.example.services.ActorService;
-import com.example.services.FilmService;
+import com.example.specification.ActorSpecification;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;

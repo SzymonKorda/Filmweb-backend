@@ -1,7 +1,7 @@
 package com.example.model;
 
-import lombok.*;
-import org.hibernate.annotations.NaturalId;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 

@@ -1,8 +1,10 @@
-package com.example.payload;
+package com.example.payload.request;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class FilmUpdateRequest {
     private String title;
     private Integer boxOffice;

@@ -1,9 +1,9 @@
 package com.example.mapper;
 
 import com.example.model.Film;
-import com.example.payload.FilmUpdateRequest;
-import com.example.payload.FullFilmResponse;
-import com.example.payload.SimpleFilmResponse;
+import com.example.payload.request.FilmUpdateRequest;
+import com.example.payload.response.FullFilmResponse;
+import com.example.payload.response.SimpleFilmResponse;
 
 public class FilmMapper {
     public static SimpleFilmResponse mapFilmToSimpleFilmResponse(Film film) {

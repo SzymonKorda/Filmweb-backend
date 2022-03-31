@@ -1,7 +1,13 @@
 package com.example.controllers;
 
 import com.example.config.ApiPageable;
-import com.example.payload.*;
+import com.example.payload.request.FilmUpdateRequest;
+import com.example.payload.request.NewCommentRequest;
+import com.example.payload.request.NewFilmRequest;
+import com.example.payload.response.CommentResponse;
+import com.example.payload.response.FullFilmResponse;
+import com.example.payload.response.SimpleActorResponse;
+import com.example.payload.response.SimpleFilmResponse;
 import com.example.security.CurrentUser;
 import com.example.security.UserPrincipal;
 import com.example.services.FilmService;

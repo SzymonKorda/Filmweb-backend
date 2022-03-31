@@ -2,12 +2,11 @@ package com.example.services;
 
 import com.example.mapper.FilmMapper;
 import com.example.mapper.UserMapper;
-import com.example.specification.FilmSpecification;
 import com.example.exceptions.ResourceNotFoundException;
 import com.example.model.Film;
 import com.example.model.User;
-import com.example.payload.SimpleFilmResponse;
-import com.example.payload.UserProfileResponse;
+import com.example.payload.response.SimpleFilmResponse;
+import com.example.payload.response.UserProfileResponse;
 import com.example.repositories.FilmRepository;
 import com.example.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -16,9 +15,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor

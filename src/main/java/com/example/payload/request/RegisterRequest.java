@@ -1,12 +1,14 @@
-package com.example.payload;
+package com.example.payload.request;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Data
+@Getter
+@Setter
 public class RegisterRequest {
     @NotBlank
     @Size(min = 4, max = 40)

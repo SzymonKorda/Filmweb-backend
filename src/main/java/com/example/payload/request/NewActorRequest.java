@@ -1,11 +1,13 @@
-package com.example.payload;
+package com.example.payload.request;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@Setter
 public class NewActorRequest {
     @NotBlank(message = "First name is mandatory")
     private String firstName;

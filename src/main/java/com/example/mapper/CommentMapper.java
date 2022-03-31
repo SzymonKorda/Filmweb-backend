@@ -1,7 +1,7 @@
 package com.example.mapper;
 
 import com.example.model.Comment;
-import com.example.payload.CommentResponse;
+import com.example.payload.response.CommentResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

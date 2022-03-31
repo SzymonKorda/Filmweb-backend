@@ -2,8 +2,6 @@ package com.example.model;
 
 import com.example.model.audit.DateAudit;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

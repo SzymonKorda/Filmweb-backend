@@ -2,20 +2,20 @@ package com.example.services;
 
 import com.example.mapper.ActorMapper;
 import com.example.mapper.FilmMapper;
+import com.example.payload.request.ActorUpdateRequest;
+import com.example.payload.request.NewActorRequest;
+import com.example.payload.response.FullActorResponse;
+import com.example.payload.response.SimpleActorResponse;
+import com.example.payload.response.SimpleFilmResponse;
 import com.example.specification.ActorSpecification;
 import com.example.exceptions.ResourceNotFoundException;
 import com.example.model.Actor;
 import com.example.model.Film;
-import com.example.payload.*;
 import com.example.repositories.ActorRepository;
 import com.example.repositories.FilmRepository;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 

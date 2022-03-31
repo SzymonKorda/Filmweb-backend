@@ -1,8 +1,7 @@
 package com.example.exceptions;
 
-import com.example.exceptions.ResourceNotFoundException;
-import com.example.exceptions.UniqueConstraintException;
-import com.example.payload.DefaultErrorResponse;
+import com.example.payload.response.DefaultErrorResponse;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,29 +29,30 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<DefaultErrorResponse> handleResourceNotFoundException
             (ResourceNotFoundException ex) {
-        DefaultErrorResponse errors = new DefaultErrorResponse();
-        errors.setError(String.format("%s not found with %s : '%s'",
-                ex.getResourceName(), ex.getFieldName(), ex.getFieldValue()));
-        errors.setStatus(HttpStatus.NOT_FOUND.value());
+        DefaultErrorResponse errors = DefaultErrorResponse.builder()
+                .error(String.format("%s not found with %s : '%s'",
+                        ex.getResourceName(), ex.getFieldName(), ex.getFieldValue()))
+                .status(HttpStatus.NOT_FOUND.value())
+                .build();
         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
     }
 
-
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<DefaultErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException exception) {
-        DefaultErrorResponse errors = new DefaultErrorResponse();
-        errors.setError(exception.getMessage());
-        errors.setStatus(HttpStatus.BAD_REQUEST.value());
+        DefaultErrorResponse errors = DefaultErrorResponse.builder()
+                .error(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build();
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(UniqueConstraintException.class)
     public ResponseEntity<DefaultErrorResponse> handleUniqueConstraintException(UniqueConstraintException exception) {
-        DefaultErrorResponse errors = new DefaultErrorResponse();
-        errors.setError(exception.getMessage());
-        errors.setStatus(HttpStatus.CONFLICT.value());
-
+        DefaultErrorResponse errors = DefaultErrorResponse.builder()
+                .error(exception.getMessage())
+                .status(HttpStatus.CONFLICT.value())
+                .build();
         return new ResponseEntity<>(errors, HttpStatus.CONFLICT);
     }
 
@@ -71,7 +71,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(x -> x.getDefaultMessage())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
         body.put("errors", errors);

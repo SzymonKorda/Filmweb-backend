@@ -1,10 +1,10 @@
 package com.example.mapper;
 
 import com.example.model.Actor;
-import com.example.payload.ActorUpdateRequest;
-import com.example.payload.FullActorResponse;
-import com.example.payload.NewActorRequest;
-import com.example.payload.SimpleActorResponse;
+import com.example.payload.request.ActorUpdateRequest;
+import com.example.payload.response.FullActorResponse;
+import com.example.payload.request.NewActorRequest;
+import com.example.payload.response.SimpleActorResponse;
 
 public class ActorMapper {
     public static SimpleActorResponse mapActorToSimpleActorResponse(Actor actor) {

@@ -3,18 +3,22 @@ package com.example.services;
 import com.example.mapper.ActorMapper;
 import com.example.mapper.CommentMapper;
 import com.example.mapper.FilmMapper;
+import com.example.payload.request.FilmUpdateRequest;
+import com.example.payload.request.NewCommentRequest;
+import com.example.payload.request.NewFilmRequest;
+import com.example.payload.response.CommentResponse;
+import com.example.payload.response.FullFilmResponse;
+import com.example.payload.response.SimpleActorResponse;
+import com.example.payload.response.SimpleFilmResponse;
 import com.example.specification.FilmSpecification;
 import com.example.exceptions.ResourceNotFoundException;
 import com.example.exceptions.UniqueConstraintException;
 import com.example.model.Actor;
 import com.example.model.Comment;
 import com.example.model.Film;
-import com.example.model.User;
-import com.example.payload.*;
 import com.example.repositories.ActorRepository;
 import com.example.repositories.CommentRepository;
 import com.example.repositories.FilmRepository;
-import com.example.repositories.UserRepository;
 import com.example.security.UserPrincipal;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,12 +26,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -127,7 +125,7 @@ public class FilmServiceImpl implements FilmService {
                 .title(newFilmRequest.getTitle())
                 .description(newFilmRequest.getDescription())
                 .duration(newFilmRequest.getDuration())
-                .boxOffice(newFilmRequest.getBoxoffice())
+                .boxOffice(newFilmRequest.getBoxOffice())
                 .releaseYear(newFilmRequest.getReleaseYear())
                 .build();
     }

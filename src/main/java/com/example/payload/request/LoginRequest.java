@@ -1,14 +1,16 @@
-package com.example.payload;
+package com.example.payload.request;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
-@Data
+@Getter
+@Setter
 public class LoginRequest {
     @NotBlank
     private String usernameOrEmail;
     @NotBlank
-    String password;
+    private String password;
 
 }

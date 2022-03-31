@@ -1,9 +1,7 @@
 package com.example.services;
 
-import com.example.model.Film;
-import com.example.specification.FilmSpecification;
-import com.example.payload.SimpleFilmResponse;
-import com.example.payload.UserProfileResponse;
+import com.example.payload.response.SimpleFilmResponse;
+import com.example.payload.response.UserProfileResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

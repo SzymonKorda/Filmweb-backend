@@ -1,8 +1,13 @@
 package com.example.services;
 
-import com.example.model.Film;
+import com.example.payload.request.FilmUpdateRequest;
+import com.example.payload.request.NewCommentRequest;
+import com.example.payload.request.NewFilmRequest;
+import com.example.payload.response.CommentResponse;
+import com.example.payload.response.FullFilmResponse;
+import com.example.payload.response.SimpleActorResponse;
+import com.example.payload.response.SimpleFilmResponse;
 import com.example.specification.FilmSpecification;
-import com.example.payload.*;
 import com.example.security.UserPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

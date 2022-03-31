@@ -1,9 +1,8 @@
 package com.example.controllers;
 
 import com.example.config.ApiPageable;
-import com.example.payload.ApiResponse;
-import com.example.payload.SimpleFilmResponse;
-import com.example.payload.UserProfileResponse;
+import com.example.payload.response.SimpleFilmResponse;
+import com.example.payload.response.UserProfileResponse;
 import com.example.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

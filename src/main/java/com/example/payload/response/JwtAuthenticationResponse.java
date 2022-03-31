@@ -1,10 +1,11 @@
-package com.example.payload;
+package com.example.payload.response;
 
-import com.example.model.User;
 import com.example.security.UserPrincipal;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class JwtAuthenticationResponse {
     private final String accessToken;
     private final String tokenType = "Bearer";

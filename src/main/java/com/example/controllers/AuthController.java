@@ -1,8 +1,8 @@
 package com.example.controllers;
 
-import com.example.payload.JwtAuthenticationResponse;
-import com.example.payload.LoginRequest;
-import com.example.payload.RegisterRequest;
+import com.example.payload.response.JwtAuthenticationResponse;
+import com.example.payload.request.LoginRequest;
+import com.example.payload.request.RegisterRequest;
 import com.example.services.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
