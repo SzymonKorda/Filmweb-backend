@@ -1,6 +1,8 @@
 package com.example.model;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -46,6 +48,7 @@ public class Actor {
     private Integer height;
 
     @Builder.Default
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(mappedBy = "actors", fetch = FetchType.LAZY)
     private Set<Film> films = new HashSet<>();
 

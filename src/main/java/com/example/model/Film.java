@@ -1,6 +1,8 @@
 package com.example.model;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -58,11 +60,12 @@ public class Film {
     private Set<Actor> actors = new HashSet<>();
 
     @Builder.Default
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(mappedBy = "userFilms")
     private Set<User> users = new HashSet<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "film")
+    @OneToMany(mappedBy = "film", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
 }
