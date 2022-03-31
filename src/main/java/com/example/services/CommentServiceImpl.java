@@ -8,6 +8,7 @@ import com.example.payload.NewCommentRequest;
 import com.example.payload.SimpleFilmResponse;
 import com.example.repositories.CommentRepository;
 import com.example.security.UserPrincipal;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,19 +19,15 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class CommentServiceImpl implements CommentService {
 
-    private CommentRepository commentRepository;
-
-    public CommentServiceImpl(CommentRepository commentRepository) {
-        this.commentRepository = commentRepository;
-    }
+    private final CommentRepository commentRepository;
 
     @Override
     public void deleteCommentById(Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
-                new ResourceNotFoundException("Comment", "id", commentId));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
         commentRepository.delete(comment);
     }
 
