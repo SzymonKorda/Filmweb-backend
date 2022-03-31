@@ -1,6 +1,7 @@
 package com.example.services;
 
 import com.example.exceptions.AppException;
+import com.example.exceptions.ResourceNotFoundException;
 import com.example.exceptions.UserAlreadyExistsException;
 import com.example.model.Role;
 import com.example.model.RoleName;
@@ -50,6 +51,18 @@ public class AuthServiceImpl implements AuthService {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         String jwt = tokenProvider.generateToken(authentication);
         return new JwtAuthenticationResponse(jwt, userPrincipal);
+    }
+
+    @Override
+    public void makeAdmin(Long userId) {
+        Role userRole = roleRepository
+                .findByName(RoleName.ROLE_ADMIN)
+                .orElseThrow(() -> new AppException("User Role not set."));
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
+        user.getRoles().add(userRole);
+        userRepository.save(user);
     }
 
     private User createUser(RegisterRequest registerRequest) {

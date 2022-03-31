@@ -9,10 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -36,6 +33,13 @@ public class AuthController {
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         JwtAuthenticationResponse jwrResponse = authService.authenticateUser(loginRequest);
         return new ResponseEntity<>(jwrResponse, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "This endpoint allows to grant admin rights for user (Endpoint created for testing)")
+    @PatchMapping("/auth/users/{userId}")
+    public ResponseEntity<?> makeAdmin(@PathVariable Long userId) {
+        authService.makeAdmin(userId);
+        return new ResponseEntity<>("User granted admin rights successfully!", HttpStatus.OK);
     }
 
 }

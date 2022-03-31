@@ -3,7 +3,6 @@ package com.example.repositories;
 import com.example.model.Actor;
 import com.example.model.Film;
 import com.example.model.User;
-import com.example.specification.FilmSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

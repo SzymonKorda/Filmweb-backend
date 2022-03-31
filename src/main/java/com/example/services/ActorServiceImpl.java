@@ -13,22 +13,19 @@ import com.example.model.Actor;
 import com.example.model.Film;
 import com.example.repositories.ActorRepository;
 import com.example.repositories.FilmRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
 
+@AllArgsConstructor
 @Service
 public class ActorServiceImpl implements ActorService {
 
-    private ActorRepository actorRepository;
-    private FilmRepository filmRepository;
-
-    public ActorServiceImpl(ActorRepository actorRepository, FilmRepository filmRepository) {
-        this.actorRepository = actorRepository;
-        this.filmRepository = filmRepository;
-    }
+    private final ActorRepository actorRepository;
+    private final FilmRepository filmRepository;
 
     @Override
     public void newActor(NewActorRequest newActorRequest) {
