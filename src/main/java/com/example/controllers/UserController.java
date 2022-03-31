@@ -3,6 +3,8 @@ package com.example.controllers;
 import com.example.config.ApiPageable;
 import com.example.payload.response.SimpleFilmResponse;
 import com.example.payload.response.UserProfileResponse;
+import com.example.security.CurrentUser;
+import com.example.security.UserPrincipal;
 import com.example.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,8 +49,8 @@ public class UserController {
             notes = "User or Admin rights needed to access this resource")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     @DeleteMapping("/users/{userId}/films/{filmId}")
-    public ResponseEntity<?> deleteFilmFromUser(@PathVariable Long userId, @PathVariable Long filmId) {
-        userService.deleteFilmFromUser(filmId, userId);
+    public ResponseEntity<?> deleteFilmFromUser(@PathVariable Long userId, @PathVariable Long filmId, @ApiIgnore @CurrentUser UserPrincipal currentUser) {
+        userService.deleteFilmFromUser(filmId, userId, currentUser);
         return new ResponseEntity<>("User's film deleted successfully!", HttpStatus.OK);
     }
 
@@ -56,8 +58,8 @@ public class UserController {
             notes = "User or Admin rights needed to access this resource")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     @PostMapping("/users/{userId}/films/{filmId}")
-    public ResponseEntity<?> addFilmToUser(@PathVariable Long userId, @PathVariable Long filmId) {
-        userService.addFilmToUser(userId, filmId);
+    public ResponseEntity<?> addFilmToUser(@PathVariable Long userId, @PathVariable Long filmId, @ApiIgnore @CurrentUser UserPrincipal currentUser) {
+        userService.addFilmToUser(userId, filmId, currentUser);
         return new ResponseEntity<>("Film added to user successfully!", HttpStatus.OK);
     }
 

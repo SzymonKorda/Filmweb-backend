@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -54,6 +55,15 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.CONFLICT.value())
                 .build();
         return new ResponseEntity<>(errors, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<DefaultErrorResponse> handleUniqueConstraintException(AccessDeniedException exception) {
+        DefaultErrorResponse errors = DefaultErrorResponse.builder()
+                .error(exception.getMessage())
+                .status(HttpStatus.FORBIDDEN.value())
+                .build();
+        return new ResponseEntity<>(errors, HttpStatus.FORBIDDEN);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

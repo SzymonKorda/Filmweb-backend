@@ -14,6 +14,7 @@ import com.example.repositories.UserRepository;
 import com.example.security.JwtTokenProvider;
 import com.example.security.UserPrincipal;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -54,13 +55,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void grantAdminRightsToUser(Long userId) {
+    public void grantAdminRightsToUser(Long userId, UserPrincipal currentUser) {
         Role userRole = roleRepository
                 .findByName(RoleName.ROLE_ADMIN)
                 .orElseThrow(() -> new AppException("User Role not set."));
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
+        if (user.getId() != currentUser.getId()) {
+            throw new AccessDeniedException("You can't grant admin rights for another user!");
+        }
         user.getRoles().add(userRole);
         userRepository.save(user);
     }

@@ -9,10 +9,12 @@ import com.example.payload.response.SimpleFilmResponse;
 import com.example.payload.response.UserProfileResponse;
 import com.example.repositories.FilmRepository;
 import com.example.repositories.UserRepository;
+import com.example.security.UserPrincipal;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -31,8 +33,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addFilmToUser(Long userId, Long filmId) {
+    public void addFilmToUser(Long userId, Long filmId, UserPrincipal currentUser) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
+        validateUser(currentUser, user, "You can't add film to another user's account!");
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
         user.getUserFilms().add(film);
         userRepository.save(user);
@@ -49,10 +52,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteFilmFromUser(Long filmId, Long userId) {
+    public void deleteFilmFromUser(Long filmId, Long userId, UserPrincipal currentUser) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
+        validateUser(currentUser, user, "You can't delete film from another user's account!");
         Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
         user.getUserFilms().remove(film);
         userRepository.save(user);
+    }
+
+    private void validateUser(UserPrincipal currentUser, User user, String error) {
+        if (user.getId() != currentUser.getId()) {
+            throw new AccessDeniedException(error);
+        }
     }
 }

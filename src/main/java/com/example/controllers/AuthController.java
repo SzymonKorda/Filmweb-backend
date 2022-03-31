@@ -3,6 +3,8 @@ package com.example.controllers;
 import com.example.payload.response.JwtAuthenticationResponse;
 import com.example.payload.request.LoginRequest;
 import com.example.payload.request.RegisterRequest;
+import com.example.security.CurrentUser;
+import com.example.security.UserPrincipal;
 import com.example.services.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,7 +12,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 @AllArgsConstructor
@@ -38,10 +42,11 @@ public class AuthController {
     }
 
     @ApiOperation(value = "This endpoint allows to grant Admin rights for User (Endpoint created for testing purposes)",
-            notes = "No authorization needed to access this resource")
+            notes = "User or Admin rights needed to access this resource")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     @PatchMapping("/auth/users/{userId}")
-    public ResponseEntity<?> grantAdminRightsToUser(@PathVariable Long userId) {
-        authService.grantAdminRightsToUser(userId);
+    public ResponseEntity<?> grantAdminRightsToUser(@PathVariable Long userId, @ApiIgnore @CurrentUser UserPrincipal currentUser) {
+        authService.grantAdminRightsToUser(userId, currentUser);
         return new ResponseEntity<>("User granted admin rights successfully!", HttpStatus.OK);
     }
 
