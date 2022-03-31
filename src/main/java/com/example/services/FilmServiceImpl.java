@@ -21,6 +21,10 @@ import com.example.repositories.CommentRepository;
 import com.example.repositories.FilmRepository;
 import com.example.security.UserPrincipal;
 import lombok.AllArgsConstructor;
+import org.hibernate.JDBCException;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -49,33 +53,29 @@ public class FilmServiceImpl implements FilmService {
     public void newFilm(NewFilmRequest newFilmRequest) {
         try {
             filmRepository.save(prepareFilm(newFilmRequest));
-        } catch (RuntimeException ex) {
-            throw new UniqueConstraintException("A film with this title and release year already exists in the database");
+        } catch (DataIntegrityViolationException ex) {
+            throw new UniqueConstraintException("A film with this title and release year already exists in the database!");
         }
     }
 
     @Override
     public void updateFilm(Long filmId, FilmUpdateRequest filmUpdateRequest) {
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
-        filmRepository.save(FilmMapper.mapFilmUpdateRequestToFilm(filmUpdateRequest, film));
+        filmRepository.save(FilmMapper.mapFilmUpdateRequestToFilm(filmUpdateRequest, findFilm(filmId)));
     }
 
     @Override
     public void deleteFilm(Long filmId) {
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
-        filmRepository.delete(film);
+        filmRepository.delete(findFilm(filmId));
     }
 
     @Override
     public FullFilmResponse findFilmById(Long filmId) {
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
-        return FilmMapper.mapFilmToFullFilmResponse(film);
+        return FilmMapper.mapFilmToFullFilmResponse(findFilm(filmId));
     }
 
     @Override
     public Page<SimpleActorResponse> getFilmActors(Long filmId, Pageable pageable) {
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
-        Page<Actor> actorsListPage = actorRepository.findAllByFilms(film, pageable);
+        Page<Actor> actorsListPage = actorRepository.findAllByFilms(findFilm(filmId), pageable);
         return new PageImpl<>(actorsListPage
                 .stream()
                 .map(ActorMapper::mapActorToSimpleActorResponse)
@@ -84,28 +84,19 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void addActorToFilm(Long filmId, Long actorId) {
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
-        Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor", "id", actorId));
-        film.getActors().add(actor);
+        Film film = findFilm(filmId);
+        film.getActors().add(findActor(actorId));
         filmRepository.save(film);
     }
 
-
     @Override
     public void addCommentToFilm(UserPrincipal currentUser, Long filmId, NewCommentRequest newCommentRequest) {
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
-        Comment comment = Comment.builder()
-                .film(film)
-                .user(currentUser.getUser())
-                .content(newCommentRequest.getContent())
-                .build();
-        commentRepository.save(comment);
+        commentRepository.save(prepareComment(currentUser, filmId, newCommentRequest));
     }
 
     @Override
     public Page<CommentResponse> getFilmComments(Long filmId, Pageable pageable) {
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
-        Page<Comment> commentListPage = commentRepository.findAllByFilm(film, pageable);
+        Page<Comment> commentListPage = commentRepository.findAllByFilm(findFilm(filmId), pageable);
         return new PageImpl<>(commentListPage
                 .stream()
                 .map(CommentMapper::mapCommentToCommentResponse)
@@ -114,10 +105,29 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void deleteActorFromFilm(Long filmId, Long actorId) {
-        Film film = filmRepository.findById(filmId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
-        Actor actor = actorRepository.findById(actorId).orElseThrow(() -> new ResourceNotFoundException("Film", "Id", filmId));
-        film.getActors().remove(actor);
+        Film film = findFilm(filmId);
+        film.getActors().remove(findActor(actorId));
         filmRepository.save(film);
+    }
+
+    private Film findFilm(Long filmId) {
+        return filmRepository
+                .findById(filmId)
+                .orElseThrow(() -> new ResourceNotFoundException("Film", "id", filmId));
+    }
+
+    private Actor findActor(Long actorId) {
+        return actorRepository
+                .findById(actorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Actor", "id", actorId));
+    }
+
+    private Comment prepareComment(UserPrincipal currentUser, Long filmId, NewCommentRequest newCommentRequest) {
+        return Comment.builder()
+                .film(findFilm(filmId))
+                .user(currentUser.getUser())
+                .content(newCommentRequest.getContent())
+                .build();
     }
 
     private Film prepareFilm(NewFilmRequest newFilmRequest) {

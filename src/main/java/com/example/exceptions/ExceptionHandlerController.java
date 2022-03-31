@@ -58,7 +58,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<DefaultErrorResponse> handleUniqueConstraintException(AccessDeniedException exception) {
+    public ResponseEntity<DefaultErrorResponse> handleAccessDeniedException(AccessDeniedException exception) {
         DefaultErrorResponse errors = DefaultErrorResponse.builder()
                 .error(exception.getMessage())
                 .status(HttpStatus.FORBIDDEN.value())
