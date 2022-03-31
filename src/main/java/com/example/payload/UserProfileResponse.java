@@ -1,57 +1,19 @@
 package com.example.payload;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@Builder
 public class UserProfileResponse {
+    private final Long id;
+    private final String name;
+    private final String username;
+    private final String email;
+    @Builder.Default
+    private final List<SimpleFilmResponse> userFilms = new ArrayList<>();
 
-    private Long id;
-
-    private String name;
-
-    private String username;
-
-    private String email;
-
-    private List<SimpleFilmResponse> userFilms = new ArrayList<>();
-
-    public List<SimpleFilmResponse> getUserFilms() {
-        return userFilms;
-    }
-
-    public void setUserFilms(List<SimpleFilmResponse> userFilms) {
-        this.userFilms = userFilms;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

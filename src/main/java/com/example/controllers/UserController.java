@@ -1,55 +1,61 @@
 package com.example.controllers;
 
-import com.example.security.CurrentUser;
-import com.example.security.UserPrincipal;
-import com.example.specification.FilmSpecification;
+import com.example.config.ApiPageable;
 import com.example.payload.ApiResponse;
 import com.example.payload.SimpleFilmResponse;
 import com.example.payload.UserProfileResponse;
-import com.example.services.FilmService;
 import com.example.services.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.security.RolesAllowed;
 
+@AllArgsConstructor
 @RestController
+@RequestMapping("/api")
+@Api(tags = "User")
 public class UserController {
 
-    private FilmService filmService;
-    private UserService userService;
+    private final UserService userService;
 
-    public UserController(FilmService filmService, UserService userService) {
-        this.filmService = filmService;
-        this.userService = userService;
-    }
-
-    @GetMapping("/users/{userId}")
+    @ApiOperation(value = "This endpoint allows to retrieve information about user")
     @RolesAllowed("ROLE_USER")
-    public UserProfileResponse getUserProfile(@PathVariable Long userId) {
-        return userService.findUserById(userId);
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<?> getUserProfile(@PathVariable Long userId) {
+        UserProfileResponse profile = userService.findUserById(userId);
+        return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "This endpoint allows to retrieve all favourite films from user")
+    @ApiPageable
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/users/{userId}/films")
-    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
-    public Page<SimpleFilmResponse> getUserFilms(FilmSpecification filmSpecification, Pageable pageable, @PathVariable Long userId) {
-        return userService.getUserFilms(filmSpecification, pageable, userId);
+    public ResponseEntity<?> getUserFilms(@PathVariable Long userId, @ApiIgnore Pageable pageable) {
+        Page<SimpleFilmResponse> films = userService.getUserFilms(pageable, userId);
+        return new ResponseEntity<>(films, HttpStatus.OK);
     }
 
-    @DeleteMapping("users/{userId}/films/{filmId}")
+    @ApiOperation(value = "This endpoint allows to delete film from user's favourites")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
-    public ResponseEntity<?> deleteUserFilm(@PathVariable Long userId, @PathVariable Long filmId) {
-        userService.deleteUserFilmById(filmId, userId);
-        return ResponseEntity.ok(new ApiResponse(true, "User's film deleted successfully"));
+    @DeleteMapping("/users/{userId}/films/{filmId}")
+    public ResponseEntity<?> deleteFilmFromUser(@PathVariable Long userId, @PathVariable Long filmId) {
+        userService.deleteFilmFromUser(filmId, userId);
+        return new ResponseEntity<>("User's film deleted successfully", HttpStatus.OK);
     }
 
-    @PostMapping("/films/{filmId}/favourites")
+    @ApiOperation(value = "This endpoint allows to add film to user favourites")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
-    public ResponseEntity<?> addFilmToUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long filmId) {
-        filmService.addFilmToUser(currentUser, filmId);
-        return ResponseEntity.ok(new ApiResponse(true, "Film added to user successfully"));
+    @PostMapping("/users/{userId}/films/{filmId}")
+    public ResponseEntity<?> addFilmToUser(@PathVariable Long userId, @PathVariable Long filmId) {
+        userService.addFilmToUser(userId, filmId);
+        return new ResponseEntity<>("Film added to user successfully", HttpStatus.OK);
     }
 
 }

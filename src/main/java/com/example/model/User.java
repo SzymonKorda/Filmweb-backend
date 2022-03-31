@@ -32,7 +32,6 @@ public class User extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    TODO: check what is name
     @NotBlank
     @Size(max = 40)
     private String name;
