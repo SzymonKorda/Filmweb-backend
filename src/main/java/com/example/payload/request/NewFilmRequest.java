@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@Builder
 public class NewFilmRequest {
     @NotBlank(message = "Title is mandatory")
     @Size(min = 3, max = 30)
