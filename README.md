@@ -5,7 +5,7 @@ API documentation:
 https://filmweb-backend.cytr.us/swagger-ui/#/
 
 Used technologies: 
-- Java 11,
+- Java 8,
 - Spring Boot, 
 - Hibernate, 
 - REST API, 
