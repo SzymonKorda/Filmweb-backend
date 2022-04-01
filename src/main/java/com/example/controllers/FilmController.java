@@ -44,15 +44,6 @@ public class FilmController {
         return new ResponseEntity<>(films, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "This endpoint allows to retrieve comments for given film",
-            notes = "No authorization needed to access this resource")
-    @ApiPageable
-    @GetMapping("/films/{filmId}/comments")
-    public ResponseEntity<?> getFilmComments(@PathVariable Long filmId, @ApiIgnore Pageable pageable) {
-        Page<CommentResponse> comments = filmService.getFilmComments(filmId, pageable);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
-    }
-
     @ApiOperation(value = "This endpoint allows to retrieve all actors for given film",
             notes = "No authorization needed to access this resource")
     @ApiPageable
@@ -104,15 +95,6 @@ public class FilmController {
     public ResponseEntity<?> addActorToFilm(@PathVariable Long filmId, @PathVariable Long actorId) {
         filmService.addActorToFilm(filmId, actorId);
         return new ResponseEntity<>("Actor added to film successfully!", HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "This endpoint allows to add comment to film",
-            notes = "User or Admin rights needed to access this resource")
-    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
-    @PostMapping("/films/{filmId}/comments")
-    public ResponseEntity<?> addCommentToFilm(@ApiIgnore @CurrentUser UserPrincipal currentUser, @PathVariable Long filmId, @Valid @RequestBody NewCommentRequest newCommentRequest) {
-        filmService.addCommentToFilm(currentUser, filmId, newCommentRequest);
-        return new ResponseEntity<>("Comment added to film successfully!", HttpStatus.OK);
     }
 
     @ApiOperation(value = "This endpoint allows to delete actor from film",

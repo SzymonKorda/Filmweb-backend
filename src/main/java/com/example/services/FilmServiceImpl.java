@@ -38,7 +38,6 @@ public class FilmServiceImpl implements FilmService {
 
     private final FilmRepository filmRepository;
     private final ActorRepository actorRepository;
-    private final CommentRepository commentRepository;
 
     @Override
     public Page<SimpleFilmResponse> getAllFilms(FilmSpecification filmSpecification, Pageable pageable) {
@@ -89,19 +88,6 @@ public class FilmServiceImpl implements FilmService {
         filmRepository.save(film);
     }
 
-    @Override
-    public void addCommentToFilm(UserPrincipal currentUser, Long filmId, NewCommentRequest newCommentRequest) {
-        commentRepository.save(prepareComment(currentUser, filmId, newCommentRequest));
-    }
-
-    @Override
-    public Page<CommentResponse> getFilmComments(Long filmId, Pageable pageable) {
-        Page<Comment> commentListPage = commentRepository.findAllByFilm(findFilm(filmId), pageable);
-        return new PageImpl<>(commentListPage
-                .stream()
-                .map(CommentMapper::mapCommentToCommentResponse)
-                .collect(Collectors.toList()), pageable, commentListPage.getTotalElements());
-    }
 
     @Override
     public void deleteActorFromFilm(Long filmId, Long actorId) {
@@ -120,14 +106,6 @@ public class FilmServiceImpl implements FilmService {
         return actorRepository
                 .findById(actorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Actor", "id", actorId));
-    }
-
-    private Comment prepareComment(UserPrincipal currentUser, Long filmId, NewCommentRequest newCommentRequest) {
-        return Comment.builder()
-                .film(findFilm(filmId))
-                .user(currentUser.getUser())
-                .content(newCommentRequest.getContent())
-                .build();
     }
 
     private Film prepareFilm(NewFilmRequest newFilmRequest) {

@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/films/{filmId}",
             "/api/actors",
             "/api/actors/{actorId}",
-            "/api//films/{filmId}/comments",
+            "/api/comments/films/{filmId}",
             "/api/films/{filmId}/actors",
             "/api/actors/{actorId}/films"
     };

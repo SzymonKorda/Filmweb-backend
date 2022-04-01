@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @ApiImplicitParams({
         @ApiImplicitParam(name = "page", dataType = "int", paramType = "query", defaultValue = "0", value = "Results page you want to retrieve (0..N-1)"),
         @ApiImplicitParam(name = "size", dataType = "int", paramType = "query", defaultValue = "20", value = "Number of records per page. Default value is 20"),
-        @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query", value = "Sorting criteria in the format: property (asc/desc). "
+        @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query", value = "Sorting criteria in the format: property, asc/desc (Eg.: id,desc). "
                 + "Default sort order is ascending. " + "Multiple sort criteria are supported.")})
 public @interface ApiPageable {
 }
