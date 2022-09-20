@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: filmweb-backend
+    depends_on:
+      - database
+    env_file:
+      - ../env/backend.env
+
+  database:
+    image: 'postgres:13.1-alpine'
+    ports:
+      - "5452:5432"
+    container_name: filmweb-database
+    volumes:
+      - filmweb_data:/var/lib/postgresql/data
+      - ../src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+    env_file:
+      - ../env/postgres.env
+volumes:
+  filmweb_data:
