@@ -3,13 +3,15 @@ package com.example.payload.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class SimpleFilmResponse {
-    private final Long id;
-    private final String title;
-    private final Integer releaseYear;
-    private final Integer duration;
+    private Long id;
+    private String title;
+    private Integer releaseYear;
+    private Integer duration;
 }

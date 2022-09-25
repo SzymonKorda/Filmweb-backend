@@ -4,14 +4,15 @@ import lombok.*;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class FullActorResponse {
-    private final Long id;
-    private final String firstName;
-    private final String lastName;
-    private final String description;
-    private final String bornPlace;
-    private final Integer bornYear;
-    private final Integer height;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String description;
+    private String bornPlace;
+    private Integer bornYear;
+    private Integer height;
 
 }

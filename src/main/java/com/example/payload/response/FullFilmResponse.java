@@ -4,13 +4,14 @@ import lombok.*;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class FullFilmResponse {
-    private final Long id;
-    private final String title;
-    private final String description;
-    private final Integer boxOffice;
-    private final Integer duration;
-    private final Integer releaseYear;
+    private Long id;
+    private String title;
+    private String description;
+    private Integer boxOffice;
+    private Integer duration;
+    private Integer releaseYear;
 
 }
