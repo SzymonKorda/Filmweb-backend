@@ -5,7 +5,7 @@ API documentation:
 https://filmweb-backend.cytr.us/swagger-ui/#/
 
 Used technologies: 
-- Java 8,
+- Java 11,
 - Spring Boot, 
 - Hibernate, 
 - REST API, 
@@ -16,7 +16,7 @@ Used technologies:
 - JWT, 
 - Project Lombok,
 - Docker,
-- MySQL 
+- PostgreSQL 
 
 Database diagram:
 
