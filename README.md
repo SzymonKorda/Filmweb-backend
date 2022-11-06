@@ -1,10 +1,20 @@
 # Movies server-side application
 Backend application for managing database of movies and actors. 
 
-
-
 API documentation:
 https://filmweb.skorda.pl/swagger-ui/#
+
+To start application please proceed with following steps:
+1. Clone repository on your local machine
+2. Install docker and execute following commands in project folder:
+
+  ```bash
+cd docker
+```
+
+  ```bash
+  docker-compose up
+  ```
 
 Used technologies: 
 - Java 11,
