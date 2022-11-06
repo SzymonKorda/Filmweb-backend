@@ -1,8 +1,10 @@
 # Movies server-side application
 Backend application for managing database of movies and actors. 
 
+
+
 API documentation:
-https://filmweb-backend.cytr.us/swagger-ui/#/
+https://filmweb.skorda.pl/swagger-ui/#
 
 Used technologies: 
 - Java 11,
